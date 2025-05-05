@@ -205,7 +205,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='skyblue',
+    marker_color='#64b5f6',
     yaxis='y1',
     width=0.3
 ))
@@ -215,7 +215,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['detected_tests'],
     name='Detected Tests',
-    marker_color='orange',
+    marker_color='#42a5f5',
     yaxis='y1',
     width=0.3
 ))
@@ -226,18 +226,18 @@ fig.add_trace(go.Scatter(
     y=summary['detection_rate_percent'],
     name='Detection Rate (%)',
     mode='lines+markers',
-    marker=dict(color='#C00000'),
-    line=dict(color='#C00000'),
+    marker=dict(color='#1976d2'),
+    line=dict(color='#1976d2'),
     yaxis='y2'
 ))
 
-# Dotted trend line (neon purple)
+# Dotted trend line
 fig.add_trace(go.Scatter(
     x=summary['week'],
     y=trend_y,
     name='Trend Line',
     mode='lines',
-    line=dict(color='#D300FF', dash='dot'),  # Neon purple with dotted style
+    line=dict(color='#0d21a1', dash='dot'),  # Neon purple with dotted style
     yaxis='y2'
 ))
 
