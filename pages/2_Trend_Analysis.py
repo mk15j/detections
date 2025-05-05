@@ -113,7 +113,7 @@ if st.sidebar.button("Logout"):
 # collection = db["fresh"]
 
 # Load data into a DataFrame
-data = pd.DataFrame(list(collection.find()))
+data = pd.DataFrame(list(listeria_collection.find()))
 
 # Ensure necessary fields are present
 required_columns = ['sub_area', 'before_during', 'test_result']
