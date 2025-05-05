@@ -70,18 +70,18 @@ df = df[(df["sample_date"] >= pd.to_datetime(date_range[0])) & (df["sample_date"
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Samples", len(df))
 col2.metric("Detected", df[df["value"] != "Not Detected"].shape[0])
-col3.metric("Detection Rate", f"{(df[df['value'] != 'Not Detected'].shape[0] / len(df)) * 100:.2f}%")
+col3.metric("Detection Rate", f"{(df[df['test_result'] != 'Not Detected'].shape[0] / len(df)) * 100:.2f}%")
 
 # fig = px.bar(
 #     df.groupby("sample_date")["value"].apply(lambda x: (x != "Not Detected").sum()).reset_index(),
-#     x="sample_date", y="value", title="Listeria Detection Over Time",
+#     x="sample_date", y="test_result", title="Listeria Detection Over Time",
 #     template="plotly_dark", color_discrete_sequence=["#00C49F"]
 # )
 # st.plotly_chart(fig, use_container_width=True)
 
 # 📈 Detection Breakdown by Sample Date
 detection_df = df.copy()
-detection_df["Detection"] = detection_df["value"].map(
+detection_df["Detection"] = detection_df["test_result"].map(
     lambda v: "Detected" if v != "Not Detected" else "Not Detected"
 )
 
@@ -101,8 +101,8 @@ fig = px.bar(
     title="Listeria Detection (Detected vs Not Detected) Over Time",
     barmode="group",
     color_discrete_map={
-        "Detected": "#BF00FF",       # Neon Green
-        "Not Detected": "#39FF14"    # Neon Purple
+       "Detected": "#BF00FF",       # Neon Purple
+       "Not Detected": "#39FF14"    # Neon Green
     },
     template="plotly_dark"
 )
@@ -112,7 +112,3 @@ fig.update_layout(
     legend_title="Detection Result",
 )
 st.plotly_chart(fig, use_container_width=True)
-
-
-# 🧪 Optional: Add test summary below the chart
-# test_summary_by_code(df)
