@@ -148,7 +148,8 @@ fig.update_layout(
     # xaxis_title="Week",
     yaxis=dict(
         title="Total/Detected Tests",
-        side="left"
+        side="left",
+        range=[0, 100]
     ),
     yaxis2=dict(
         title="Detection Rate (%)",
