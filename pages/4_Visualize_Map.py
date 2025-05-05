@@ -15,7 +15,7 @@ from io import BytesIO
 # MongoDB connection
 client = MongoClient(st.secrets["MONGO_URI"])
 db = client["koral"]
-listeria_collection = db["listeria"]
+listeria_collection = db["fresh"]
 
 def load_image_base64(image_path="koral6.png"):
     if not os.path.exists(image_path):
