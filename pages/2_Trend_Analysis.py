@@ -35,11 +35,11 @@ if "sample_date" not in df.columns or "value" not in df.columns:
     st.stop()
 
 # 🧪 Label Detection
-df["Detection"] = df["value"].apply(lambda x: "Detected" if x != "Not Detected" else "Not Detected")
+df["Detection"] = df["test_result"].apply(lambda x: "Detected" if x != "Not Detected" else "Not Detected")
 
 # 🗓️ Restrict date range for X-axis
 start_date = pd.to_datetime("2025-02-03")
-end_date = pd.to_datetime("2025-03-28")
+end_date = pd.to_datetime("2025-04-15")
 
 df = df[(df["sample_date"] >= start_date) & (df["sample_date"] <= end_date)]
 
