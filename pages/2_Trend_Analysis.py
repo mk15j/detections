@@ -85,7 +85,7 @@ for bpdp in summary['before_during'].unique():
             side="right",
             range=[0, 100]
         ),
-        legend=dict(x=0.5, xanchor="center", orientation="h"),
+        legend=dict(x=0.2, xanchor="center", orientation="h"),
         height=500,
         bargap=0.1,  # Gap between bars
         bargroupgap=0.1  # Gap between groups of bars (if applicable)
@@ -209,7 +209,7 @@ fig.add_trace(go.Bar(
     name='Total Tests',
     marker_color='#bbdefb',
     yaxis='y1',
-    width=0.3
+    width=0.1
 ))
 
 # Bar for detected tests
@@ -219,7 +219,7 @@ fig.add_trace(go.Bar(
     name='Detected Tests',
     marker_color='#42a5f5',
     yaxis='y1',
-    width=0.3
+    width=0.1
 ))
 
 # Line for detection rate %
@@ -258,7 +258,7 @@ fig.update_layout(
         side="right",
         range=[0, 100]
     ),
-    legend=dict(x=0.5, xanchor="center", orientation="h"),
+    legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
     bargap=0.2,
     bargroupgap=0.1
