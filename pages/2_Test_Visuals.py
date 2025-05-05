@@ -67,7 +67,7 @@ if "test_result" in df_filtered.columns and "location_code" in df_filtered.colum
         x=codes,
         y=not_detected_counts,
         name="Not Detected",
-        marker_color="#39FF14"  # Neon Green
+        marker_color="#bbdefb"  
     ))
 
     # Detected Bar
@@ -75,7 +75,7 @@ if "test_result" in df_filtered.columns and "location_code" in df_filtered.colum
         x=codes,
         y=detected_counts,
         name="Detected",
-        marker_color="#8A00C4"  # Neon Purple
+        marker_color="#42a5f5"  
     ))
 
     # Trendline (Detected)
@@ -84,7 +84,7 @@ if "test_result" in df_filtered.columns and "location_code" in df_filtered.colum
         y=detected_counts,
         name="Detection Trendline",
         mode="lines+markers",
-        line=dict(color="#FF3131", width=1, dash="dash")  # Neon Red
+        line=dict(color="#0d21a1", width=1, dash="dash") 
     ))
 
     # Layout
@@ -171,8 +171,8 @@ if 'value' in df_filtered.columns:
 
     # Define custom neon colors for categories
     color_map = {
-        "Detected": "#8A00C4",        # Neon Purple 
-        "Not Detected": "#39FF14"     # Neon Green
+        "Detected": "#42a5f5",        # Neon Purple 
+        "Not Detected": "#bbdefb"     # Neon Green
     }
 
     # Ensure the colors align with the data order
