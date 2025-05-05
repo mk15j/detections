@@ -76,7 +76,8 @@ for bpdp in summary['before_during'].unique():
         # xaxis_title="Sub Area",
         yaxis=dict(
             title="Total Tests",
-            side="left"
+            side="left",
+            range=[0, 100]
         ),
         yaxis2=dict(
             title="Detection Rate (%)",
