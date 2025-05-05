@@ -54,7 +54,7 @@ for bpdp in summary['before_during'].unique():
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker_color='#FF4324', #neon orange
+        marker_color='#64b5f6', #neon orange
         yaxis='y1',
         width=0.1  # Adjust bar thickness (default is 0.8)
     ))
@@ -66,7 +66,7 @@ for bpdp in summary['before_during'].unique():
         name='Detection Rate (%)',
         mode='lines+markers',
         marker=dict(color='red'),
-        line=dict(color='#C00000'),  # Set line color to #C00000
+        line=dict(color='#2196f3'),  # Set line color to #C00000
         yaxis='y2'
     ))
 
