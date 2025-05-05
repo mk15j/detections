@@ -16,4 +16,4 @@ if st.sidebar.button("Logout"):
     st.rerun()
 
 st.title("Welcome to Koral Seafood Listeria Dashboard")
-# st.markdown("Use the sidebar to navigate between different dashboard sections.")
+st.markdown("Use the sidebar to navigate between different dashboard sections.")
