@@ -1,11 +1,11 @@
 import streamlit as st
 from utils.auth import authenticate  # Make sure this path is correct
-from streamlit.source_util import get_pages
+# from streamlit.source_util import get_pages
 
-pages = get_pages("app.py")  # Replace with your actual main file name if different
-st.write("Available pages:", list(pages.keys()))
-for key, page in pages.items():
-    st.write(f"{page['page_name']}")
+# pages = get_pages("app.py")  # Replace with your actual main file name if different
+# st.write("Available pages:", list(pages.keys()))
+# for key, page in pages.items():
+#     st.write(f"{page['page_name']}")
 st.title("🔐 Login")
 
 username = st.text_input("Username")
@@ -16,7 +16,7 @@ if st.button("Login"):
     if user:
         st.session_state["user"] = user
         st.success(f"Welcome, {user['username']}!")
-        st.switch_page("Overview Dashboard")  # ✅ Correct title, not filename
+        st.switch_page("1_Overview Dashboard")  # ✅ Correct title, not filename
     else:
         st.error("Invalid username or password")
 
