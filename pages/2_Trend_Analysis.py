@@ -18,10 +18,6 @@ if st.sidebar.button("Logout"):
     st.success("🔓 Logged out successfully.")
     st.stop()
 
-
-# # 📅 Page content
-# st.title("📅 Trend Analysis")
-
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
