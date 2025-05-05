@@ -180,7 +180,7 @@ if 'value' in df_filtered.columns:
 
     fig_value_donut = px.pie(
         value_counts,
-        names='value',
+        names='test_result',
         values='count',
         hole=0.4,
         # title="Listeria Test Result Breakdown",
