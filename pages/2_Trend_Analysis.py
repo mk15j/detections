@@ -181,7 +181,9 @@ summary = grouped['test_result'].agg(
     detected_tests=lambda x: (x == 'Detected').sum()
 ).reset_index()
 
-summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
+summary['detection_rate_percent'] = (
+    (summary['detected_tests'] / summary['total_tests']) * 100
+).round(1)
 
 # Extract numeric part of week for proper sorting (e.g., "Week-12" → 12)
 summary['week_num'] = summary['week'].str.extract(r'Week-(\d+)').astype(int)
@@ -237,7 +239,7 @@ fig.add_trace(go.Scatter(
     y=trend_y,
     name='Trend Line',
     mode='lines',
-    line=dict(color='#0d21a1', dash='dot'),  # Neon purple with dotted style
+    line=dict(color='#0d21a1', dash='dot'),  
     yaxis='y2'
 ))
 
