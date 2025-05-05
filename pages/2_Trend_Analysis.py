@@ -25,26 +25,27 @@ if st.sidebar.button("Logout"):
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
-if not all(col in data.columns for col in ['sub_area', 'before_during', 'test_result']):
-    st.error("Required columns missing in MongoDB data.")
+# Validate required fields
+required_cols = ['sub_area', 'before_during', 'test_result']
+if not all(col in data.columns for col in required_cols):
+    st.error(f"Missing required fields in data: {', '.join(required_cols)}")
     st.stop()
 
 data['before_during'] = data['before_during'].str.upper()
 data['test_result'] = data['test_result'].str.strip()
 
-# Summarize
+# Aggregate results
 grouped = data.groupby(['sub_area', 'before_during'])
 summary = grouped['test_result'].agg(
     total_tests='count',
     detected_tests=lambda x: (x == 'Detected').sum()
 ).reset_index()
-
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
-# Title
-st.title("📊 Listeria Detection Analysis")
+# Streamlit UI
+st.title("📈 Listeria Detection Trend Analysis")
 
-# Chart
+# Chart loop
 for phase in summary['before_during'].unique():
     st.subheader(f"{phase} Phase")
 
@@ -52,53 +53,49 @@ for phase in summary['before_during'].unique():
 
     fig = go.Figure()
 
-    # Bar chart: Total Tests
+    # Bar Chart
     fig.add_trace(go.Bar(
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker_color='rgba(0, 123, 255, 0.7)',
-        width=0.5,
+        marker_color='steelblue',
         yaxis='y1'
     ))
 
-    # Line chart: Detection Rate
+    # Line Chart
     fig.add_trace(go.Scatter(
         x=df['sub_area'],
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
-        line=dict(color='crimson', shape='spline', width=3),
+        line=dict(color='crimson', width=3),
         marker=dict(size=8),
         yaxis='y2'
     ))
 
-    # Layout
+    # Layout - clean, safe, beautiful
     fig.update_layout(
-        template='plotly_white',
-        height=500,
+        title=f"{phase} Phase - Test Summary",
         xaxis=dict(title='Sub Area'),
         yaxis=dict(
             title='Total Tests',
-            titlefont=dict(color='rgba(0,123,255,1)'),
-            tickfont=dict(color='rgba(0,123,255,1)')
+            showgrid=False,
+            titlefont=dict(color='steelblue'),
+            tickfont=dict(color='steelblue')
         ),
         yaxis2=dict(
             title='Detection Rate (%)',
-            titlefont=dict(color='crimson'),
-            tickfont=dict(color='crimson'),
             overlaying='y',
             side='right',
+            showgrid=False,
+            titlefont=dict(color='crimson'),
+            tickfont=dict(color='crimson'),
             range=[0, 100]
         ),
-        legend=dict(
-            orientation='h',
-            yanchor='bottom',
-            y=1.02,
-            xanchor='center',
-            x=0.5
-        ),
-        margin=dict(l=60, r=60, t=60, b=60)
+        legend=dict(x=0.5, y=1.1, orientation='h', xanchor='center'),
+        height=500,
+        margin=dict(l=60, r=60, t=60, b=60),
+        template='plotly_white'
     )
 
     st.plotly_chart(fig, use_container_width=True)
