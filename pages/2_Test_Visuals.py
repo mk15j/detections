@@ -102,13 +102,13 @@ if "test_result" in df_filtered.columns and "location_code" in df_filtered.colum
     st.plotly_chart(fig, use_container_width=True)
 
 
-# 🔢 Test Frequency by Code
-st.subheader("🔢 Test Frequency by Code")
-code_count = df_filtered["location_code"].value_counts().reset_index()
-code_count.columns = ["Code", "Test Count"]
-fig_code = px.bar(code_count, x="Code", y="Test Count", color="Test Count", color_continuous_scale="Sunsetdark")
-# title="Number of Tests by Code", 
-st.plotly_chart(fig_code, use_container_width=True)
+# # 🔢 Test Frequency by Code
+# st.subheader("🔢 Test Frequency by Code")
+# code_count = df_filtered["location_code"].value_counts().reset_index()
+# code_count.columns = ["Code", "Test Count"]
+# fig_code = px.bar(code_count, x="Code", y="Test Count", color="Test Count", color_continuous_scale="Sunsetdark")
+# # title="Number of Tests by Code", 
+# st.plotly_chart(fig_code, use_container_width=True)
 
 # 🏭 Test Frequency by Description
 # st.subheader("🏭 Test Frequency by Description")
