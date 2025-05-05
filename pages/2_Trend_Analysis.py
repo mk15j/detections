@@ -65,8 +65,8 @@ for bpdp in summary['before_during'].unique():
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
-        marker=dict(color='red'),
-        line=dict(color='#2196f3'),  # Set line color to #C00000
+        marker=dict(color='#2196f3'),
+        line=dict(color='#0d47a1'),  # Set line color to #C00000
         yaxis='y2'
     ))
 
