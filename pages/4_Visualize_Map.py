@@ -75,8 +75,8 @@ else:
 
             filtered['hover_text'] = (
                 "<b>Point:</b> " + filtered['points'] + "<br>"
-                + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
-                + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
+                # + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
+                # + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
                 + "<b>Last 15 Days:</b><br>&nbsp;&nbsp;" + filtered['history']
             )
 
