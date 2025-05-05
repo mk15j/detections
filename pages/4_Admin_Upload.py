@@ -39,7 +39,7 @@ st.write(df.head())  # Preview data
 
 # ✅ Required columns
 required_columns = {
-    "sample_code", "sample_description", "translated_description", "test_code", "test_result","unit"
+    "sample_code", "sample_description", "translated_description", "test_code", "test_result","unit", 
     "analytical_report_code", "sample_date", "location_code", "fresh_smoked", "sub_area",
      "before_during", "value", "week_num", "week", "x", "y","points"
 }
