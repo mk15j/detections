@@ -126,39 +126,39 @@ st.plotly_chart(fig_code, use_container_width=True)
 #     st.plotly_chart(fig_heat, use_container_width=True)
 
 
-# 📊 Detection Outcome by Code (Area Chart)
-st.subheader("📊 Detection Outcome by Code - Area Chart")
+# # 📊 Detection Outcome by Code (Area Chart)
+# st.subheader("📊 Detection Outcome by Code - Area Chart")
 
-if "location_code" in df_filtered.columns and "test_result" in df_filtered.columns:
-    df_code_area = df_filtered.copy()
+# if "location_code" in df_filtered.columns and "test_result" in df_filtered.columns:
+#     df_code_area = df_filtered.copy()
 
-    # Normalize detection values
-    df_code_area["Detection"] = df_code_area["test_result"].map({
-        "Detected": "Detected",
-        "Not Detected": "Not Detected"
-    }).fillna("Unknown")
+#     # Normalize detection values
+#     df_code_area["Detection"] = df_code_area["test_result"].map({
+#         "Detected": "Detected",
+#         "Not Detected": "Not Detected"
+#     }).fillna("Unknown")
 
-    # Group by code and detection status
-    detection_by_code = df_code_area.groupby(["location_code", "Detection"]).size().reset_index(name="Count")
+#     # Group by code and detection status
+#     detection_by_code = df_code_area.groupby(["location_code", "Detection"]).size().reset_index(name="Count")
 
-    # Plot as area chart
-    fig_area_code = px.area(
-        detection_by_code,
-        x="location_code",
-        y="Count",
-        color="Detection",
-        line_group="Detection",
-        # title="Detection Outcome by Code (Detected vs Not Detected)",
-        color_discrete_map={"Detected": "#8A00C4", "Not Detected": "#39FF14", "Unknown": "#FF5C00"}
-    )
+#     # Plot as area chart
+#     fig_area_code = px.area(
+#         detection_by_code,
+#         x="location_code",
+#         y="Count",
+#         color="Detection",
+#         line_group="Detection",
+#         # title="Detection Outcome by Code (Detected vs Not Detected)",
+#         color_discrete_map={"Detected": "#8A00C4", "Not Detected": "#39FF14", "Unknown": "#FF5C00"}
+#     )
 
-    fig_area_code.update_layout(
-        xaxis_title="Test Code (Location)",
-        yaxis_title="Number of Samples",
-        legend_title="Detection Outcome"
-    )
+#     fig_area_code.update_layout(
+#         xaxis_title="Test Code (Location)",
+#         yaxis_title="Number of Samples",
+#         legend_title="Detection Outcome"
+#     )
 
-    st.plotly_chart(fig_area_code, use_container_width=True)
+#     st.plotly_chart(fig_area_code, use_container_width=True)
 
 
 
