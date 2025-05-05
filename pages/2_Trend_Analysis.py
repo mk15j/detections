@@ -25,77 +25,69 @@ if st.sidebar.button("Logout"):
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
-# Validate required fields
-required_cols = ['sub_area', 'before_during', 'test_result']
-if not all(col in data.columns for col in required_cols):
-    st.error(f"Missing required fields in data: {', '.join(required_cols)}")
+# Ensure necessary fields are present
+required_columns = ['sub_area', 'before_during', 'test_result']
+if not all(col in data.columns for col in required_columns):
+    st.error("Missing required columns in MongoDB data.")
     st.stop()
 
+# Standardize column values
 data['before_during'] = data['before_during'].str.upper()
 data['test_result'] = data['test_result'].str.strip()
 
-# Aggregate results
+# Compute detection stats
 grouped = data.groupby(['sub_area', 'before_during'])
+
 summary = grouped['test_result'].agg(
     total_tests='count',
     detected_tests=lambda x: (x == 'Detected').sum()
 ).reset_index()
+
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
-# Streamlit UI
-st.title("📈 Listeria Detection Trend Analysis")
+# Create combo chart for each before_during value
+for bpdp in summary['before_during'].unique():
+    st.subheader(f"Detection Summary for `{bpdp}`")
 
-# Chart loop
-for phase in summary['before_during'].unique():
-    st.subheader(f"{phase} Phase")
-
-    df = summary[summary['before_during'] == phase]
+    df = summary[summary['before_during'] == bpdp]
 
     fig = go.Figure()
 
-    # Bar Chart
+    # Bar for number of tests
     fig.add_trace(go.Bar(
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker_color='steelblue',
+        marker_color='skyblue',
         yaxis='y1'
     ))
 
-    # Line Chart
+    # Line for detection rate %
     fig.add_trace(go.Scatter(
         x=df['sub_area'],
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
-        line=dict(color='crimson', width=3),
-        marker=dict(size=8),
+        marker=dict(color='red'),
         yaxis='y2'
     ))
 
-    # Layout - clean, safe, beautiful
+    # Layout with secondary y-axis
     fig.update_layout(
-        title=f"{phase} Phase - Test Summary",
-        xaxis=dict(title='Sub Area'),
+        title=f"Sub-area Detection Rate and Test Count ({bpdp})",
+        xaxis_title="Sub Area",
         yaxis=dict(
-            title='Total Tests',
-            showgrid=False,
-            titlefont=dict(color='steelblue'),
-            tickfont=dict(color='steelblue')
+            title="Total Tests",
+            side="left"
         ),
         yaxis2=dict(
-            title='Detection Rate (%)',
-            overlaying='y',
-            side='right',
-            showgrid=False,
-            titlefont=dict(color='crimson'),
-            tickfont=dict(color='crimson'),
+            title="Detection Rate (%)",
+            overlaying="y",
+            side="right",
             range=[0, 100]
         ),
-        legend=dict(x=0.5, y=1.1, orientation='h', xanchor='center'),
-        height=500,
-        margin=dict(l=60, r=60, t=60, b=60),
-        template='plotly_white'
+        legend=dict(x=0.5, xanchor="center", orientation="h"),
+        height=500
     )
 
     st.plotly_chart(fig, use_container_width=True)
