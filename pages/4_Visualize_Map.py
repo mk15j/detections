@@ -161,7 +161,6 @@ import numpy as np
 import os
 from pymongo import MongoClient
 from datetime import datetime, timedelta
-import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
 import base64
@@ -172,7 +171,6 @@ client = MongoClient(st.secrets["MONGO_URI"])
 db = client["koral"]
 listeria_collection = db["fresh"]
 
-# Load image and encode to base64
 def load_image_base64(image_path="koral6.png"):
     if not os.path.exists(image_path):
         st.error(f"Image not found at {image_path}")
@@ -181,32 +179,34 @@ def load_image_base64(image_path="koral6.png"):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     img_str = base64.b64encode(buffered.getvalue()).decode()
-    return image, f"data:image/png;base64,{img_str}", image.size
+    return image, f"data:image/png;base64,{img_str}", image.size  # (width, height)
 
-# Generate inline SVG mini-chart
+def create_trend_emojis(values):
+    values = values.sort_values('sample_date', ascending=False)
+    return ''.join('🔴' if v == 1 else '🟢' if v == 0 else '⚪' for v in values['value'].fillna(-1).astype(int))
 
-def generate_mini_chart(values):
-    svg_parts = []
-    radius = 4
-    spacing = 10
-    for i, val in enumerate(values):
-        color = "#FF0000" if val == 1 else "#00AA00"
-        cx = i * spacing + radius
-        svg_parts.append(f'<circle cx="{cx}" cy="{radius}" r="{radius}" fill="{color}" />')
-    width = len(values) * spacing
-    return f"""
-    <svg width="{width}" height="{2*radius}" xmlns="http://www.w3.org/2000/svg">
-        {''.join(svg_parts)}
-    </svg>
-    """
+def get_color_code(subset):
+    total = len(subset)
+    if total == 0:
+        return "#808080"  # gray
+    positives = subset['value'].sum()
+    ratio = positives / total
+    if ratio >= 0.7:
+        return "#8B0000"  # blood red
+    elif ratio > 0.5:
+        return "#FF0000"  # red
+    elif ratio > 0.3:
+        return "#FFBF00"  # amber
+    else:
+        return "#008000"  # green
 
 # ---- Streamlit App ----
 st.title("Listeria Sample Map Visualization")
 
-# Load image
+# Load image for background
 image_pil, image_base64, (width, height) = load_image_base64()
 
-# Get data with coordinates
+# Get unique dates from database
 all_data = list(listeria_collection.find({"x": {"$exists": True}, "y": {"$exists": True}}))
 if not all_data:
     st.warning("No data found with X and Y coordinates in MongoDB.")
@@ -222,65 +222,37 @@ else:
         filtered = filtered.rename(columns={"point": "points"})
 
         if not filtered.empty:
+            # Normalize columns
             filtered['points'] = filtered['points'].astype(str)
             filtered['x'] = pd.to_numeric(filtered['x'], errors='coerce')
             filtered['y'] = pd.to_numeric(filtered['y'], errors='coerce')
             filtered['value'] = pd.to_numeric(filtered['value'], errors='coerce')
-            if 'description' not in filtered.columns:
-                filtered['description'] = ""
+            filtered['description'] = filtered.get('description', "").astype(str)
 
-            # Last 28-day positivity
-            start_date_28 = selected_date - timedelta(days=27)
-            recent_28 = df[(df['sample_date'] >= start_date_28) & (df['sample_date'] <= selected_date)].copy()
-            recent_28['points'] = recent_28['point'].astype(str)
-            grouped_28 = recent_28.groupby('points')['value'].apply(lambda x: x.dropna().astype(int))
+            # Lookup for last 28 days
+            start_date = selected_date - timedelta(days=27)
+            recent_data = df[(df['sample_date'] >= start_date) & (df['sample_date'] <= selected_date)].copy()
+            recent_data = recent_data.rename(columns={"point": "points"})
+            recent_data['points'] = recent_data['points'].astype(str)
+            recent_data['value'] = pd.to_numeric(recent_data['value'], errors='coerce')
 
-            color_map = {}
-            for point, values in grouped_28.items():
-                if len(values) == 0:
-                    continue
-                percent_positive = (values.sum() / len(values)) * 100
-                if percent_positive >= 70:
-                    color_map[point] = '#8B0000'  # blood red
-                elif percent_positive > 50:
-                    color_map[point] = '#FF0000'  # red
-                elif percent_positive > 30:
-                    color_map[point] = '#FFBF00'  # amber
-                else:
-                    color_map[point] = '#008000'  # green
+            # Emoji trend per point
+            trend_lookup = recent_data.groupby('points').apply(create_trend_emojis)
 
-            filtered['color'] = filtered['points'].map(color_map).fillna("#999999")
+            # Color by positivity ratio
+            color_lookup = recent_data.groupby('points').apply(get_color_code)
 
-            # Last 15-day history + chart
-            start_date_15 = selected_date - timedelta(days=14)
-            recent_15 = df[(df['sample_date'] >= start_date_15) & (df['sample_date'] <= selected_date)].copy()
-            recent_15['points'] = recent_15['point'].astype(str)
-            recent_15['value'] = pd.to_numeric(recent_15['value'], errors='coerce')
-
-            history_map = {}
-            chart_map = {}
-            for point, group in recent_15.groupby('points'):
-                sorted_group = group.sort_values('sample_date', ascending=False)
-                history_html = "<br>&nbsp;&nbsp;" + "<br>&nbsp;&nbsp;".join(
-                    sorted_group.apply(
-                        lambda row: f"{row['sample_date']}: <b style='color:red'>Positive</b>" if row['value'] == 1 else
-                                    f"{row['sample_date']}: <b style='color:green'>Negative</b>", axis=1))
-                values = group.sort_values('sample_date')['value'].dropna().astype(int).tolist()[-15:]
-                history_map[point] = history_html
-                chart_map[point] = generate_mini_chart(values)
-
-            filtered['history'] = filtered['points'].map(history_map).fillna("No history available")
-            filtered['mini_chart'] = filtered['points'].map(chart_map).fillna("")
+            filtered['trend_emoji'] = filtered['points'].map(trend_lookup).fillna("No trend")
+            filtered['color'] = filtered['points'].map(color_lookup)
 
             filtered['hover_text'] = (
                 "<b>Point:</b> " + filtered['points'] + "<br>"
                 + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
                 + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
-                + "<b>Last 15 Days:</b>" + filtered['history'] + "<br>"
-                + "<b>Chart:</b><br>" + filtered['mini_chart']
+                + "<b>Last 28 Days:</b> " + filtered['trend_emoji']
             )
 
-            # Plotly figure
+            # Create figure with background image
             fig = go.Figure()
             fig.add_layout_image(
                 dict(
@@ -298,7 +270,7 @@ else:
 
             fig.add_trace(go.Scatter(
                 x=filtered['x'],
-                y=height - filtered['y'],
+                y=height - filtered['y'],  # invert Y to match image
                 mode='markers',
                 marker=dict(
                     size=12,
@@ -320,5 +292,3 @@ else:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No data found for the selected date.")
-
-
