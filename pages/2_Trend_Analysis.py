@@ -25,19 +25,15 @@ if st.sidebar.button("Logout"):
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
-# Validate essential columns
-required_columns = ['sub_area', 'before_during', 'test_result']
-if not all(col in data.columns for col in required_columns):
+if not all(col in data.columns for col in ['sub_area', 'before_during', 'test_result']):
     st.error("Required columns missing in MongoDB data.")
     st.stop()
 
-# Normalize columns
 data['before_during'] = data['before_during'].str.upper()
 data['test_result'] = data['test_result'].str.strip()
 
-# Group and summarize data
+# Summarize
 grouped = data.groupby(['sub_area', 'before_during'])
-
 summary = grouped['test_result'].agg(
     total_tests='count',
     detected_tests=lambda x: (x == 'Detected').sum()
@@ -46,71 +42,63 @@ summary = grouped['test_result'].agg(
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
 # Title
-st.title("🧪 Listeria Detection Overview by Sub Area")
+st.title("📊 Listeria Detection Analysis")
 
-# Combo Chart Loop
-for bpdp in summary['before_during'].unique():
-    st.markdown(f"### `{bpdp}` Phase Summary")
+# Chart
+for phase in summary['before_during'].unique():
+    st.subheader(f"{phase} Phase")
 
-    df = summary[summary['before_during'] == bpdp]
+    df = summary[summary['before_during'] == phase]
 
     fig = go.Figure()
 
-    # Bar chart: Total tests with custom style
+    # Bar chart: Total Tests
     fig.add_trace(go.Bar(
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker=dict(
-            color='rgba(0,123,255,0.8)',
-            line=dict(color='rgba(0,123,255,1.0)', width=1.5)
-        ),
-        hovertemplate='%{x}<br>Total Tests: %{y}<extra></extra>',
+        marker_color='rgba(0, 123, 255, 0.7)',
         width=0.5,
         yaxis='y1'
     ))
 
-    # Line chart: Detection rate
+    # Line chart: Detection Rate
     fig.add_trace(go.Scatter(
         x=df['sub_area'],
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
-        line=dict(shape='spline', color='crimson', width=3),
+        line=dict(color='crimson', shape='spline', width=3),
         marker=dict(size=8),
-        hovertemplate='%{x}<br>Detection Rate: %{y:.2f}%<extra></extra>',
         yaxis='y2'
     ))
 
-    # Layout styling
+    # Layout
     fig.update_layout(
         template='plotly_white',
         height=500,
         xaxis=dict(title='Sub Area'),
         yaxis=dict(
             title='Total Tests',
-            showgrid=False,
             titlefont=dict(color='rgba(0,123,255,1)'),
             tickfont=dict(color='rgba(0,123,255,1)')
         ),
         yaxis2=dict(
             title='Detection Rate (%)',
-            overlaying='y',
-            side='right',
-            range=[0, 100],
             titlefont=dict(color='crimson'),
             tickfont=dict(color='crimson'),
-            showgrid=False
+            overlaying='y',
+            side='right',
+            range=[0, 100]
         ),
         legend=dict(
-            orientation="h",
-            yanchor="bottom",
+            orientation='h',
+            yanchor='bottom',
             y=1.02,
-            xanchor="center",
+            xanchor='center',
             x=0.5
         ),
-        plot_bgcolor='rgba(245, 245, 245, 1)',
-        margin=dict(t=60, b=40, l=40, r=40),
+        margin=dict(l=60, r=60, t=60, b=60)
     )
 
     st.plotly_chart(fig, use_container_width=True)
