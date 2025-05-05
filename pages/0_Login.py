@@ -30,6 +30,6 @@ if st.button("Login"):
         st.success(f"Welcome, {user['username']}!")
 
         # 🟢 Use the sidebar page title (NOT filename!)
-        st.switch_page("Overview Dashboard ")
+        st.switch_page("1 Overview Dashboard")
     else:
         st.error("Invalid username or password")
