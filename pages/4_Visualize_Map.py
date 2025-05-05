@@ -202,9 +202,9 @@ else:
             if 'description' not in filtered.columns:
                 filtered['description'] = ""
 
-            # --- Last 15 days history ---
-            start_date_15 = selected_date - timedelta(days=14)
-            recent_data = df[(df['sample_date'] >= start_date_15) & (df['sample_date'] <= selected_date)].copy()
+            # --- Last 28 days history ---
+            start_date_28 = selected_date - timedelta(days=27)
+            recent_data = df[(df['sample_date'] >= start_date_28) & (df['sample_date'] <= selected_date)].copy()
             recent_data = recent_data.rename(columns={"point": "points"})
             recent_data['points'] = recent_data['points'].astype(str)
             recent_data['value'] = pd.to_numeric(recent_data['value'], errors='coerce')
