@@ -30,27 +30,29 @@ def load_data():
     df["sample_date"] = pd.to_datetime(df["sample_date"], errors="coerce")
     return df
 
-# 📈 Summary by code
 def test_summary_by_code(df):
     st.subheader("🔬 Test Summary by Code")
 
-    if "location_code" not in df.columns or "test_result" not in df.columns:
-        st.warning("Missing 'location_code' or 'test_result' columns in data.")
+    if "test_code" not in df.columns or "test_result" not in df.columns:
+        st.warning("Missing 'test_code' or 'test_result' columns in data.")
         return
 
+    # Clean 'test_result' column
+    df["test_result"] = df["test_result"].astype(str).str.strip().str.lower()
+
     summary_df = (
-        df.groupby(["location_code", "test_result"])
+        df.groupby(["test_code", "test_result"])
         .size()
         .reset_index(name="count")
-        .pivot(index="location_code", columns="test_result", values="count")
+        .pivot(index="test_code", columns="test_result", values="count")
         .fillna(0)
         .astype(int)
     )
 
     summary_df["Total"] = summary_df.sum(axis=1)
-    if "Not Detected" in summary_df.columns:
+    if "not detected" in summary_df.columns:
         summary_df["Detection Rate (%)"] = (
-            100 * (summary_df["Total"] - summary_df["Not Detected"]) / summary_df["Total"]
+            100 * (summary_df["Total"] - summary_df["not detected"]) / summary_df["Total"]
         ).round(2)
     else:
         summary_df["Detection Rate (%)"] = 100.0
