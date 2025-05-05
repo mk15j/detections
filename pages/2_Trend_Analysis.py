@@ -58,7 +58,7 @@ for bpdp in summary['before_during'].unique():
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker_color='#FF5C00', #neon orange
+        marker_color=dict(color='#FF5C00'), #neon orange
         yaxis='y1',
         width=0.3  # Adjust bar thickness (default is 0.8)
     ))
