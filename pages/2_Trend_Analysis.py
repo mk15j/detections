@@ -93,7 +93,7 @@ for bpdp in summary['before_during'].unique():
     st.plotly_chart(fig, use_container_width=True)
 
 # Compute detection stats by week (without categorizing by before_during)
-grouped = data.groupby(['week_num'])
+grouped = data.groupby(['week'])
 
 summary = grouped['test_result'].agg(
     total_tests='count',
@@ -103,7 +103,7 @@ summary = grouped['test_result'].agg(
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
 # Sort the summary DataFrame by week number in increasing order
-summary = summary.sort_values(by='week_num')
+summary = summary.sort_values(by='week')
 
 # Create a single combo chart for total tests, detected tests, and detection rate
 st.subheader("Detection Summary")
@@ -112,7 +112,7 @@ fig = go.Figure()
 
 # Bar for total tests (Column chart)
 fig.add_trace(go.Bar(
-    x=summary['week_num'],  # week as x-axis
+    x=summary['week'],  # week as x-axis
     y=summary['total_tests'],
     name='Total Tests',
     marker_color='skyblue',
@@ -122,7 +122,7 @@ fig.add_trace(go.Bar(
 
 # Bar for detected tests
 fig.add_trace(go.Bar(
-    x=summary['week_num'],  # week as x-axis
+    x=summary['week'],  # week as x-axis
     y=summary['detected_tests'],
     name='Detected Tests',
     marker_color='orange',
@@ -132,7 +132,7 @@ fig.add_trace(go.Bar(
 
 # Line for detection rate % (Secondary y-axis)
 fig.add_trace(go.Scatter(
-    x=summary['week_num'],  # week as x-axis
+    x=summary['week'],  # week as x-axis
     y=summary['detection_rate_percent'],
     name='Detection Rate (%)',
     mode='lines+markers',
