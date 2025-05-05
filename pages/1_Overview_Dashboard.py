@@ -107,9 +107,7 @@
 # )
 # st.plotly_chart(fig, use_container_width=True)
 
-
 import streamlit as st
-# ✅ Set page config FIRST
 st.set_page_config(page_title="Overview Dashboard", layout="wide")
 
 import pandas as pd
@@ -136,34 +134,6 @@ def load_data():
     df["sample_date"] = pd.to_datetime(df["sample_date"], errors="coerce")
     return df
 
-def test_summary_by_code(df):
-    st.subheader("🔬 Test Summary by Code")
-
-    if "test_code" not in df.columns or "test_result" not in df.columns:
-        st.warning("Missing 'test_code' or 'test_result' columns in data.")
-        return
-
-    df["test_result"] = df["test_result"].astype(str).str.strip().str.lower()
-
-    summary_df = (
-        df.groupby(["test_code", "test_result"])
-        .size()
-        .reset_index(name="count")
-        .pivot(index="test_code", columns="test_result", values="count")
-        .fillna(0)
-        .astype(int)
-    )
-
-    summary_df["Total"] = summary_df.sum(axis=1)
-    if "not detected" in summary_df.columns:
-        summary_df["Detection Rate (%)"] = (
-            100 * (summary_df["Total"] - summary_df["not detected"]) / summary_df["Total"]
-        ).round(1)  # ✅ One decimal place
-    else:
-        summary_df["Detection Rate (%)"] = 100.0
-
-    st.dataframe(summary_df.style.background_gradient(cmap="Oranges", axis=1))
-
 # 🔎 Main content
 st.title("📊 Overview Dashboard")
 df = load_data()
@@ -188,24 +158,25 @@ detection_df["test_result"] = detection_df["test_result"].astype(str).str.strip(
 detection_df["Detection"] = detection_df["test_result"].map(
     lambda v: "Detected" if v != "not detected" else "Not Detected"
 )
-
-# ✅ Normalize and keep datetime for x-axis
 detection_df["sample_date"] = pd.to_datetime(detection_df["sample_date"]).dt.normalize()
 
-# Group by date and detection
+# ✅ Ensure all dates are represented on the x-axis
+all_dates = pd.date_range(start=df["sample_date"].min(), end=df["sample_date"].max(), freq='D')
+full_index = pd.MultiIndex.from_product([all_dates, ["Detected", "Not Detected"]], names=["sample_date", "Detection"])
 datewise_df = (
     detection_df.groupby(["sample_date", "Detection"])
     .size()
+    .reindex(full_index, fill_value=0)
     .reset_index(name="count")
 )
 
-# Plot
+# 📊 Bar Chart
 fig = px.bar(
     datewise_df,
     x="sample_date",
     y="count",
     color="Detection",
-    title="Listeria Detection Over Time",
+    title="Listeria Detection (Detected vs Not Detected) Over Time",
     barmode="group",
     color_discrete_map={
         "Detected": "#42a5f5",
@@ -222,12 +193,14 @@ fig.update_layout(
     xaxis=dict(
         tickformat="%b %d",
         tickangle=-45,
-        type="date"
+        type="date",
+        tickmode="linear",
+        dtick=86400000.0  # 1 day in milliseconds
     )
 )
 
-# Optional: Add moving average trendline for 'Detected'
-detected_trend = detection_df[detection_df["Detection"] == "Detected"].groupby("sample_date").size().rolling(window=5).mean()
+# Optional: Add rolling average trendline
+detected_trend = datewise_df[datewise_df["Detection"] == "Detected"].set_index("sample_date")["count"].rolling(5).mean()
 fig.add_scatter(
     x=detected_trend.index,
     y=detected_trend.values,
@@ -238,5 +211,11 @@ fig.add_scatter(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# 🔬 Summary by Code
-test_summary_by_code(df)
+
+
+
+
+
+
+
+
