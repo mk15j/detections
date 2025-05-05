@@ -92,12 +92,8 @@ for bpdp in summary['before_during'].unique():
 
     st.plotly_chart(fig, use_container_width=True)
 
-
-# Assuming you have a 'week' column and that it’s in datetime format or week number
-# If not, you may need to convert or group your data into weeks first.
-
-# Compute detection stats by week
-grouped = data.groupby(['week', 'sub_area', 'before_during'])
+# Compute detection stats by week (without categorizing by before_during)
+grouped = data.groupby(['week'])
 
 summary = grouped['test_result'].agg(
     total_tests='count',
@@ -106,64 +102,60 @@ summary = grouped['test_result'].agg(
 
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
-# Create combo chart for each 'before_during' value
-for bpdp in summary['before_during'].unique():
-    st.subheader(f"Detection Summary for `{bpdp}`")
+# Create a single combo chart for total tests, detected tests, and detection rate
+st.subheader("Detection Summary")
 
-    df = summary[summary['before_during'] == bpdp]
+fig = go.Figure()
 
-    fig = go.Figure()
+# Bar for total tests (Column chart)
+fig.add_trace(go.Bar(
+    x=summary['week'],  # week as x-axis
+    y=summary['total_tests'],
+    name='Total Tests',
+    marker_color='skyblue',
+    yaxis='y1',  # Primary y-axis for total tests
+    width=0.3  # Adjust the thickness of the bars
+))
 
-    # Bar for total tests (Column chart)
-    fig.add_trace(go.Bar(
-        x=df['week'],  # week as x-axis
-        y=df['total_tests'],
-        name='Total Tests',
-        marker_color='skyblue',
-        yaxis='y1',  # Primary y-axis for total tests
-        width=0.3  # Adjust the thickness of the bars
-    ))
+# Bar for detected tests
+fig.add_trace(go.Bar(
+    x=summary['week'],  # week as x-axis
+    y=summary['detected_tests'],
+    name='Detected Tests',
+    marker_color='orange',
+    yaxis='y1',  # Primary y-axis for detected tests
+    width=0.3  # Adjust the thickness of the bars
+))
 
-    # Bar for detected tests
-    fig.add_trace(go.Bar(
-        x=df['week'],  # week as x-axis
-        y=df['detected_tests'],
-        name='Detected Tests',
-        marker_color='orange',
-        yaxis='y1',  # Primary y-axis for detected tests
-        width=0.3  # Adjust the thickness of the bars
-    ))
+# Line for detection rate % (Secondary y-axis)
+fig.add_trace(go.Scatter(
+    x=summary['week'],  # week as x-axis
+    y=summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    marker=dict(color='#C00000'),
+    line=dict(color='#C00000'),  # Red line color
+    yaxis='y2'  # Secondary y-axis for detection rate
+))
 
-    # Line for detection rate % (Secondary y-axis)
-    fig.add_trace(go.Scatter(
-        x=df['week'],  # week as x-axis
-        y=df['detection_rate_percent'],
-        name='Detection Rate (%)',
-        mode='lines+markers',
-        marker=dict(color='#C00000'),
-        line=dict(color='#C00000'),  # Red line color
-        yaxis='y2'  # Secondary y-axis for detection rate
-    ))
+# Layout with secondary y-axis and adjusted bar thickness
+fig.update_layout(
+    title="Detection Summary (All Production Phases)",
+    xaxis_title="Week",
+    yaxis=dict(
+        title="Total/Detected Tests",
+        side="left"
+    ),
+    yaxis2=dict(
+        title="Detection Rate (%)",
+        overlaying="y",
+        side="right",
+        range=[0, 100]
+    ),
+    legend=dict(x=0.5, xanchor="center", orientation="h"),
+    height=500,
+    bargap=0.2,  # Gap between bars
+    bargroupgap=0.1  # Gap between groups of bars (if applicable)
+)
 
-    # Layout with secondary y-axis and adjusted bar thickness
-    fig.update_layout(
-        title=f"Detection Summary for `{bpdp}`",
-        xaxis_title="Week",
-        yaxis=dict(
-            title="Total/Detected Tests",
-            side="left"
-        ),
-        yaxis2=dict(
-            title="Detection Rate (%)",
-            overlaying="y",
-            side="right",
-            range=[0, 100]
-        ),
-        legend=dict(x=0.5, xanchor="center", orientation="h"),
-        height=500,
-        bargap=0.2,  # Gap between bars
-        bargroupgap=0.1  # Gap between groups of bars (if applicable)
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
+st.plotly_chart(fig, use_container_width=True)
