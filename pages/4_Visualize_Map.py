@@ -118,3 +118,32 @@ else:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("No data found for the selected date.")
+
+
+# Calculate positivity % in last 28 days
+window_28d_start = selected_date - timedelta(days=27)
+window_data = df[(df['sample_date'] >= window_28d_start) & (df['sample_date'] <= selected_date)].copy()
+window_data = window_data.rename(columns={"point": "points"})
+window_data['points'] = window_data['points'].astype(str)
+window_data['value'] = pd.to_numeric(window_data['value'], errors='coerce')
+
+# Compute positivity percentage per point
+def determine_color(pos_ratio):
+    if pos_ratio >= 0.7:
+        return "#8B0000"  # blood red
+    elif pos_ratio > 0.5:
+        return "#FF0000"  # red
+    elif pos_ratio > 0.3:
+        return "#FFBF00"  # amber
+    else:
+        return "#008000"  # green
+
+positivity_lookup = (
+    window_data.groupby("points")["value"]
+    .agg(lambda vals: np.mean(vals.dropna()) if not vals.dropna().empty else np.nan)
+    .map(determine_color)
+)
+
+# Apply color map to filtered data
+filtered["dot_color"] = filtered["points"].map(positivity_lookup).fillna("#A9A9A9")  # gray fallback
+
