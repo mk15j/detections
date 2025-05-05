@@ -93,6 +93,78 @@ for bpdp in summary['before_during'].unique():
 
     st.plotly_chart(fig, use_container_width=True)
 
+# # Compute detection stats by week (without categorizing by before_during)
+# grouped = data.groupby(['week'])
+
+# summary = grouped['test_result'].agg(
+#     total_tests='count',
+#     detected_tests=lambda x: (x == 'Detected').sum()
+# ).reset_index()
+
+# summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
+
+# # Sort the summary DataFrame by week number in increasing order
+# summary = summary.sort_values(by='week')
+
+# # Create a single combo chart for total tests, detected tests, and detection rate
+# st.subheader("Detection Summary")
+
+# fig = go.Figure()
+
+# # Bar for total tests (Column chart)
+# fig.add_trace(go.Bar(
+#     x=summary['week'],  # week as x-axis
+#     y=summary['total_tests'],
+#     name='Total Tests',
+#     marker_color='skyblue',
+#     yaxis='y1',  # Primary y-axis for total tests
+#     width=0.3  # Adjust the thickness of the bars
+# ))
+
+# # Bar for detected tests
+# fig.add_trace(go.Bar(
+#     x=summary['week'],  # week as x-axis
+#     y=summary['detected_tests'],
+#     name='Detected Tests',
+#     marker_color='orange',
+#     yaxis='y1',  # Primary y-axis for detected tests
+#     width=0.3  # Adjust the thickness of the bars
+# ))
+
+# # Line for detection rate % (Secondary y-axis)
+# fig.add_trace(go.Scatter(
+#     x=summary['week'],  # week as x-axis
+#     y=summary['detection_rate_percent'],
+#     name='Detection Rate (%)',
+#     mode='lines+markers',
+#     marker=dict(color='#C00000'),
+#     line=dict(color='#C00000'),  # Red line color
+#     yaxis='y2'  # Secondary y-axis for detection rate
+# ))
+
+# # Layout with secondary y-axis and adjusted bar thickness
+# fig.update_layout(
+#     title="Detection Summary (All Production Phases)",
+#     # xaxis_title="Week",
+#     yaxis=dict(
+#         title="Total/Detected Tests",
+#         side="left",
+#         range=[0, 100]
+#     ),
+#     yaxis2=dict(
+#         title="Detection Rate (%)",
+#         overlaying="y",
+#         side="right",
+#         range=[0, 100]
+#     ),
+#     legend=dict(x=0.5, xanchor="center", orientation="h"),
+#     height=500,
+#     bargap=0.2,  # Gap between bars
+#     bargroupgap=0.1  # Gap between groups of bars (if applicable)
+# )
+
+# st.plotly_chart(fig, use_container_width=True)
+
 # Compute detection stats by week (without categorizing by before_during)
 grouped = data.groupby(['week'])
 
@@ -103,8 +175,11 @@ summary = grouped['test_result'].agg(
 
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
-# Sort the summary DataFrame by week number in increasing order
-summary = summary.sort_values(by='week')
+# Extract numeric part of week for proper sorting (e.g., "Week-12" → 12)
+summary['week_num'] = summary['week'].str.extract(r'Week-(\d+)').astype(int)
+
+# Sort by the extracted week number
+summary = summary.sort_values(by='week_num')
 
 # Create a single combo chart for total tests, detected tests, and detection rate
 st.subheader("Detection Summary")
@@ -113,39 +188,39 @@ fig = go.Figure()
 
 # Bar for total tests (Column chart)
 fig.add_trace(go.Bar(
-    x=summary['week'],  # week as x-axis
+    x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
     marker_color='skyblue',
-    yaxis='y1',  # Primary y-axis for total tests
-    width=0.3  # Adjust the thickness of the bars
+    yaxis='y1',
+    width=0.3
 ))
 
 # Bar for detected tests
 fig.add_trace(go.Bar(
-    x=summary['week'],  # week as x-axis
+    x=summary['week'],
     y=summary['detected_tests'],
     name='Detected Tests',
     marker_color='orange',
-    yaxis='y1',  # Primary y-axis for detected tests
-    width=0.3  # Adjust the thickness of the bars
+    yaxis='y1',
+    width=0.3
 ))
 
 # Line for detection rate % (Secondary y-axis)
 fig.add_trace(go.Scatter(
-    x=summary['week'],  # week as x-axis
+    x=summary['week'],
     y=summary['detection_rate_percent'],
     name='Detection Rate (%)',
     mode='lines+markers',
     marker=dict(color='#C00000'),
-    line=dict(color='#C00000'),  # Red line color
-    yaxis='y2'  # Secondary y-axis for detection rate
+    line=dict(color='#C00000'),
+    yaxis='y2'
 ))
 
 # Layout with secondary y-axis and adjusted bar thickness
 fig.update_layout(
     title="Detection Summary (All Production Phases)",
-    # xaxis_title="Week",
+    xaxis_title="Week",
     yaxis=dict(
         title="Total/Detected Tests",
         side="left",
@@ -159,8 +234,9 @@ fig.update_layout(
     ),
     legend=dict(x=0.5, xanchor="center", orientation="h"),
     height=500,
-    bargap=0.2,  # Gap between bars
-    bargroupgap=0.1  # Gap between groups of bars (if applicable)
+    bargap=0.2,
+    bargroupgap=0.1
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
