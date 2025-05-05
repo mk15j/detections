@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.auth import authenticate  # Assuming authenticate is in utils/auth.py
+from utils.auth import authenticate  # Make sure this path is correct
 
 st.title("🔐 Login")
 
@@ -11,7 +11,7 @@ if st.button("Login"):
     if user:
         st.session_state["user"] = user
         st.success(f"Welcome, {user['username']}!")
-        st.switch_page("1_Overview_Dashboard.py")  # You can customize this path
+        st.switch_page("Overview Dashboard")  # ✅ Correct title, not filename
     else:
         st.error("Invalid username or password")
-        
+
