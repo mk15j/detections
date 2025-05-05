@@ -144,7 +144,7 @@ if "location_code" in df_filtered.columns and "test_result" in df_filtered.colum
     # Plot as area chart
     fig_area_code = px.area(
         detection_by_code,
-        x="code",
+        x="location_code",
         y="Count",
         color="Detection",
         line_group="Detection",
