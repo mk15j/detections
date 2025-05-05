@@ -133,7 +133,7 @@ if "location_code" in df_filtered.columns and "test_result" in df_filtered.colum
     df_code_area = df_filtered.copy()
 
     # Normalize detection values
-    df_code_area["Detection"] = df_code_area["value"].map({
+    df_code_area["Detection"] = df_code_area["test_result"].map({
         "Detected": "Detected",
         "Not Detected": "Not Detected"
     }).fillna("Unknown")
