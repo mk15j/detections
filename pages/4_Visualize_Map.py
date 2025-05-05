@@ -170,7 +170,7 @@ if not all_data:
 
 df = pd.DataFrame(all_data)
 df['sample_date'] = pd.to_datetime(df['sample_date'], errors='coerce').dt.date
-df['points'] = df.get('point', 'N/A').astype(str)
+df['points'] = df['point'].fillna('N/A').astype(str) if 'point' in df.columns else 'N/A'
 df['x'] = pd.to_numeric(df['x'], errors='coerce')
 df['y'] = pd.to_numeric(df['y'], errors='coerce')
 df['value'] = pd.to_numeric(df['value'], errors='coerce')
