@@ -107,18 +107,18 @@ fig.update_layout(
 )
 st.plotly_chart(fig, use_container_width=True)
 
-# @st.cache_data
-# def load_data():
-#     data = list(listeria_collection.find({}, {"_id": 0}))
-#     df = pd.DataFrame(data)
-#     if "sample_date" in df.columns:
-#         df["sample_date"] = pd.to_datetime(df["sample_date"], errors="coerce")
-#     return df
+@st.cache_data
+def load_data():
+    data = list(listeria_collection.find({}, {"_id": 0}))
+    df = pd.DataFrame(data)
+    if "sample_date" in df.columns:
+        df["sample_date"] = pd.to_datetime(df["sample_date"], errors="coerce")
+    return df
 
-# df = load_data()
-# if df.empty:
-#     st.warning("No data available.")
-#     st.stop()
+df = load_data()
+if df.empty:
+    st.warning("No data available.")
+    st.stop()
 
 st.sidebar.header("Filters")
 date_range = st.sidebar.date_input("Date Range", [df["sample_date"].min(), df["sample_date"].max()])
