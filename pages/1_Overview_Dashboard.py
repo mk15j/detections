@@ -34,15 +34,15 @@ def load_data():
 def test_summary_by_code(df):
     st.subheader("🔬 Test Summary by Code")
 
-    if "code" not in df.columns or "value" not in df.columns:
-        st.warning("Missing 'code' or 'value' columns in data.")
+    if "location_code" not in df.columns or "test_result" not in df.columns:
+        st.warning("Missing 'location_code' or 'test_result' columns in data.")
         return
 
     summary_df = (
-        df.groupby(["code", "value"])
+        df.groupby(["location_code", "test_result"])
         .size()
         .reset_index(name="count")
-        .pivot(index="code", columns="value", values="count")
+        .pivot(index="location_code", columns="test_result", values="count")
         .fillna(0)
         .astype(int)
     )
