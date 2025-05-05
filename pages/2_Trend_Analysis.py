@@ -39,7 +39,7 @@ summary = grouped['test_result'].agg(
     detected_tests=lambda x: (x == 'Detected').sum()
 ).reset_index()
 
-summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
+summary['detection_rate_percent'] = ((summary['detected_tests'] / summary['total_tests']) * 100).round(1)
 
 # Create combo chart for each before_during value
 for bpdp in summary['before_during'].unique():
