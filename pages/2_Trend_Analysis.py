@@ -102,6 +102,9 @@ summary = grouped['test_result'].agg(
 
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
+# Sort the summary DataFrame by week number in increasing order
+summary = summary.sort_values(by='week')
+
 # Create a single combo chart for total tests, detected tests, and detection rate
 st.subheader("Detection Summary")
 
