@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.auth import authenticate  # Make sure this path is correct
-from streamlit.source_util import get_pages
+# from streamlit.source_util import get_pages
 
 # pages = get_pages("app.py")  # Replace with your actual main file name if different
 # st.write("Available pages:", list(pages.keys()))
