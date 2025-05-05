@@ -73,7 +73,7 @@ for bpdp in summary['before_during'].unique():
     # Layout with secondary y-axis and adjusted bar thickness
     fig.update_layout(
         title=f"Sub-area Detection Rate and Test Count ({bpdp})",
-        xaxis_title="Sub Area",
+        # xaxis_title="Sub Area",
         yaxis=dict(
             title="Total Tests",
             side="left"
@@ -144,7 +144,7 @@ fig.add_trace(go.Scatter(
 # Layout with secondary y-axis and adjusted bar thickness
 fig.update_layout(
     title="Detection Summary (All Production Phases)",
-    xaxis_title="Week",
+    # xaxis_title="Week",
     yaxis=dict(
         title="Total/Detected Tests",
         side="left"
