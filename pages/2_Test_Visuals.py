@@ -41,18 +41,18 @@ df_filtered = df[(df["sample_date"] >= pd.to_datetime(date_range[0])) & (df["sam
 # 🧬 Detection Outcome by Code with Trendline
 st.subheader("🧬 Detection Outcome by Code - Trendline")
 
-if "value" in df_filtered.columns and "code" in df_filtered.columns:
+if "test_result" in df_filtered.columns and "location_code" in df_filtered.columns:
     import plotly.graph_objects as go
 
     # Clean and normalize detection values
-    df_filtered["Detection"] = df_filtered["value"].map({
+    df_filtered["Detection"] = df_filtered["test_result"].map({
         "Detected": "Detected",
         "Not Detected": "Not Detected"
     }).fillna("Unknown")
 
     # Group by code and detection outcome
-    heat_df = df_filtered.groupby(["code", "Detection"]).size().reset_index(name="count")
-    pivot_df = heat_df.pivot(index="code", columns="Detection", values="count").fillna(0)
+    heat_df = df_filtered.groupby(["location_code", "Detection"]).size().reset_index(name="count")
+    pivot_df = heat_df.pivot(index="location_code", columns="Detection", values="count").fillna(0)
 
     # Prepare data
     codes = pivot_df.index.tolist()
@@ -104,7 +104,7 @@ if "value" in df_filtered.columns and "code" in df_filtered.columns:
 
 # 🔢 Test Frequency by Code
 st.subheader("🔢 Test Frequency by Code")
-code_count = df_filtered["code"].value_counts().reset_index()
+code_count = df_filtered["location_code"].value_counts().reset_index()
 code_count.columns = ["Code", "Test Count"]
 fig_code = px.bar(code_count, x="Code", y="Test Count", color="Test Count", color_continuous_scale="Sunsetdark")
 # title="Number of Tests by Code", 
@@ -129,7 +129,7 @@ st.plotly_chart(fig_code, use_container_width=True)
 # 📊 Detection Outcome by Code (Area Chart)
 st.subheader("📊 Detection Outcome by Code - Area Chart")
 
-if "code" in df_filtered.columns and "value" in df_filtered.columns:
+if "location_code" in df_filtered.columns and "test_result" in df_filtered.columns:
     df_code_area = df_filtered.copy()
 
     # Normalize detection values
@@ -139,7 +139,7 @@ if "code" in df_filtered.columns and "value" in df_filtered.columns:
     }).fillna("Unknown")
 
     # Group by code and detection status
-    detection_by_code = df_code_area.groupby(["code", "Detection"]).size().reset_index(name="Count")
+    detection_by_code = df_code_area.groupby(["location_code", "Detection"]).size().reset_index(name="Count")
 
     # Plot as area chart
     fig_area_code = px.area(
@@ -166,8 +166,8 @@ if "code" in df_filtered.columns and "value" in df_filtered.columns:
 st.subheader("🧬 Detection Ratio for Samples")
 
 if 'value' in df_filtered.columns:
-    value_counts = df_filtered['value'].value_counts().reset_index()
-    value_counts.columns = ['value', 'count']
+    value_counts = df_filtered['test_result'].value_counts().reset_index()
+    value_counts.columns = ['test_result', 'count']
 
     # Define custom neon colors for categories
     color_map = {
@@ -176,7 +176,7 @@ if 'value' in df_filtered.columns:
     }
 
     # Ensure the colors align with the data order
-    custom_colors = [color_map.get(v, "#FFFFFF") for v in value_counts['value']]
+    custom_colors = [color_map.get(v, "#FFFFFF") for v in value_counts['test_result']]
 
     fig_value_donut = px.pie(
         value_counts,
