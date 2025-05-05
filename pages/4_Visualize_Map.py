@@ -53,7 +53,7 @@ else:
             filtered['points'] = filtered['points'].astype(str)
             filtered['x'] = pd.to_numeric(filtered['x'], errors='coerce')
             filtered['y'] = pd.to_numeric(filtered['y'], errors='coerce')
-            filtered['values'] = pd.to_numeric(filtered['values'], errors='coerce')
+            filtered['value'] = pd.to_numeric(filtered['value'], errors='coerce')
 
             if 'description' not in filtered.columns:
                 filtered['description'] = ""
@@ -63,11 +63,11 @@ else:
             recent_data = df[(df['sample_date'] >= start_date) & (df['sample_date'] <= selected_date)].copy()
             recent_data = recent_data.rename(columns={"point": "points"})
             recent_data['points'] = recent_data['points'].astype(str)
-            recent_data['values'] = pd.to_numeric(recent_data['values'], errors='coerce')
+            recent_data['value'] = pd.to_numeric(recent_data['value'], errors='coerce')
 
             recent_lookup = recent_data.groupby('points').apply(
                 lambda x: "<br>&nbsp;&nbsp;".join(x.sort_values('sample_date').apply(
-                    lambda row: f"{row['sample_date']}: {'<b style=\"color:red\">Positive</b>' if row['values'] == 1 else '<b style=\"color:green\">Negative</b>' if row['values'] == 0 else 'Unknown'}",
+                    lambda row: f"{row['sample_date']}: {'<b style=\"color:red\">Positive</b>' if row['value'] == 1 else '<b style=\"color:green\">Negative</b>' if row['value'] == 0 else 'Unknown'}",
                     axis=1))
             )
 
