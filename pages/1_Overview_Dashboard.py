@@ -69,7 +69,7 @@ df = df[(df["sample_date"] >= pd.to_datetime(date_range[0])) & (df["sample_date"
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Samples", len(df))
-col2.metric("Detected", df[df["value"] != "Not Detected"].shape[0])
+col2.metric("Detected", df[df["test_result"] != "Not Detected"].shape[0])
 col3.metric("Detection Rate", f"{(df[df['test_result'] != 'Not Detected'].shape[0] / len(df)) * 100:.2f}%")
 
 # fig = px.bar(
