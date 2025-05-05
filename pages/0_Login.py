@@ -10,7 +10,7 @@ st.title("🔐 Login")
 
 username = st.text_input("Username")
 password = st.text_input("Password", type="password")
-
+st.write(f"{page['page_name']}")
 if st.button("Login"):
     user = authenticate(username, password)
     if user:
