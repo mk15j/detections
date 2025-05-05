@@ -120,9 +120,9 @@ st.plotly_chart(fig, use_container_width=True)
 #     st.warning("No data available.")
 #     st.stop()
 
-# st.sidebar.header("Filters")
-# date_range = st.sidebar.date_input("Date Range", [df["sample_date"].min(), df["sample_date"].max()])
-# df_filtered = df[(df["sample_date"] >= pd.to_datetime(date_range[0])) & (df["sample_date"] <= pd.to_datetime(date_range[1]))]
+st.sidebar.header("Filters")
+date_range = st.sidebar.date_input("Date Range", [df["sample_date"].min(), df["sample_date"].max()])
+df_filtered = df[(df["sample_date"] >= pd.to_datetime(date_range[0])) & (df["sample_date"] <= pd.to_datetime(date_range[1]))]
 
 
 # 🧬 Detection Outcome by Code with Trendline
