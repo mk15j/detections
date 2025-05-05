@@ -227,7 +227,11 @@ else:
             filtered['x'] = pd.to_numeric(filtered['x'], errors='coerce')
             filtered['y'] = pd.to_numeric(filtered['y'], errors='coerce')
             filtered['value'] = pd.to_numeric(filtered['value'], errors='coerce')
-            filtered['description'] = filtered.get('description', "").astype(str)
+           # Ensure 'description' column exists
+            if 'description' not in filtered.columns:
+                filtered['description'] = ""
+            else:
+                filtered['description'] = filtered['description'].astype(str)
 
             # Lookup for last 28 days
             start_date = selected_date - timedelta(days=27)
