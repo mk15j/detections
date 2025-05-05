@@ -76,7 +76,7 @@ else:
             filtered['hover_text'] = (
                 "<b>Point:</b> " + filtered['points'] + "<br>"
                 + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
-                + "<b>Status:</b> " + filtered['values'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
+                + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
                 + "<b>X:</b> " + filtered['x'].astype(str) + "<br>"
                 + "<b>Y:</b> " + filtered['y'].astype(str) + "<br>"
                 + "<b>Last 15 Days:</b><br>&nbsp;&nbsp;" + filtered['history']
@@ -104,7 +104,7 @@ else:
                 mode='markers',
                 marker=dict(
                     size=12,
-                    color=filtered['values'].map({1: "#FF0000", 0: "#008000"}).fillna("#FFBF00"),
+                    color=filtered['value'].map({1: "#FF0000", 0: "#008000"}).fillna("#FFBF00"),
                     line=dict(width=1, color='DarkSlateGrey')
                 ),
                 customdata=filtered[['hover_text']],
