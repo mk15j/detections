@@ -168,13 +168,23 @@ if not all_data:
     st.warning("No data found with X and Y coordinates.")
     st.stop()
 
-df = pd.DataFrame(all_data)
+# df = pd.DataFrame(all_data)
+# df['sample_date'] = pd.to_datetime(df['sample_date'], errors='coerce').dt.date
+# df['points'] = df['point'].fillna('N/A').astype(str) if 'point' in df.columns else 'N/A'
+# df['x'] = pd.to_numeric(df['x'], errors='coerce')
+# df['y'] = pd.to_numeric(df['y'], errors='coerce')
+# df['value'] = pd.to_numeric(df['value'], errors='coerce')
+# df['description'] = df.get('description', "")
+
+
 df['sample_date'] = pd.to_datetime(df['sample_date'], errors='coerce').dt.date
 df['points'] = df['point'].fillna('N/A').astype(str) if 'point' in df.columns else 'N/A'
 df['x'] = pd.to_numeric(df['x'], errors='coerce')
 df['y'] = pd.to_numeric(df['y'], errors='coerce')
 df['value'] = pd.to_numeric(df['value'], errors='coerce')
-df['description'] = df.get('description', "")
+df['description'] = df['description'].fillna("") if 'description' in df.columns else ""
+
+
 
 # Date range selector
 min_date, max_date = df['sample_date'].min(), df['sample_date'].max()
