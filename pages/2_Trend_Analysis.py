@@ -22,110 +22,20 @@ if st.sidebar.button("Logout"):
 # # 📅 Page content
 # st.title("📅 Trend Analysis")
 
-# @st.cache_data
-# def load_data():
-#     df = pd.DataFrame(listeria_collection.find({}, {"_id": 0}))
-#     df["sample_date"] = pd.to_datetime(df["sample_date"], errors="coerce")
-#     return df
-
-# df = load_data()
-
-# # ✅ Ensure necessary columns exist
-# if "sample_date" not in df.columns or "value" not in df.columns:
-#     st.warning("The dataset is missing 'sample_date' or 'value' columns.")
-#     st.stop()
-
-# # 🧪 Label Detection
-# df["Detection"] = df["test_result"].apply(lambda x: "Detected" if x != "Not Detected" else "Not Detected")
-
-# # 🗓️ Restrict date range for X-axis
-# start_date = pd.to_datetime("2025-02-03")
-# end_date = pd.to_datetime("2025-04-15")
-
-# df = df[(df["sample_date"] >= start_date) & (df["sample_date"] <= end_date)]
-
-# # 📊 Group by date and detection
-# if df.empty:
-#     st.warning("No data available in the selected date range.")
-# else:
-#     trend_df = df.groupby(["sample_date", "Detection"]).size().reset_index(name="count")
-
-#     # 💎 Plot line chart with value labels and diamond markers
-#     fig = px.line(
-#         trend_df,
-#         x="sample_date",
-#         y="count",
-#         color="Detection",
-#         title="Detection Trend Over Time",
-#         template="plotly_dark",
-#         color_discrete_map={
-#             "Detected": "#8A00C4",       # Neon Purple
-#             "Not Detected": "#39FF14"    # Neon Green
-#         },
-#         markers=True
-#     )
-
-#     # 🔧 Customize markers and annotations
-#     fig.update_traces(marker=dict(symbol="diamond", size=10), text=trend_df["count"], textposition="top center")
-
-#     # 🛠️ Customize x-axis to show all dates vertically
-#     all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
-#     fig.update_layout(
-#         xaxis=dict(
-#             tickmode='array',
-#             tickvals=all_dates,
-#             tickformat='%d-%b',
-#             tickangle=90
-#         ),
-#         xaxis_title="Sample Date",
-#         yaxis_title="Number of Samples",
-#         legend_title="Detection Result"
-#     )
-
-#     st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-
-
-# # df = load_data()
-
-# # trend = df.groupby(["test", "sample_date"])["value"].apply(lambda x: (x != "Not Detected").sum()).reset_index()
-
-# # fig = px.line(trend, x="sample_date", y="value", color="test",
-# #               title="Detection Trends by Test",
-# #               template="plotly_dark", color_discrete_sequence=px.colors.qualitative.T10)
-
-# # st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-# import streamlit as st
-# import pandas as pd
-# import pymongo
-
-
-# # Connect to MongoDB
-# client = pymongo.MongoClient("mongodb://localhost:27017")  # Update with your MongoDB URI
-# db = client["koral"]
-# collection = db["fresh"]
-
-# Load data into a DataFrame
+# Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
-# Ensure necessary fields are present
+# Validate essential columns
 required_columns = ['sub_area', 'before_during', 'test_result']
 if not all(col in data.columns for col in required_columns):
-    st.error("Missing required columns in MongoDB data.")
+    st.error("Required columns missing in MongoDB data.")
     st.stop()
 
-# Standardize column values
+# Normalize columns
 data['before_during'] = data['before_during'].str.upper()
 data['test_result'] = data['test_result'].str.strip()
 
-# Compute detection stats
+# Group and summarize data
 grouped = data.groupby(['sub_area', 'before_during'])
 
 summary = grouped['test_result'].agg(
@@ -135,50 +45,72 @@ summary = grouped['test_result'].agg(
 
 summary['detection_rate_percent'] = (summary['detected_tests'] / summary['total_tests']) * 100
 
-# Create combo chart for each before_during value
+# Title
+st.title("🧪 Listeria Detection Overview by Sub Area")
+
+# Combo Chart Loop
 for bpdp in summary['before_during'].unique():
-    st.subheader(f"Detection Summary for `{bpdp}`")
+    st.markdown(f"### `{bpdp}` Phase Summary")
 
     df = summary[summary['before_during'] == bpdp]
 
     fig = go.Figure()
 
-    # Bar for number of tests
+    # Bar chart: Total tests with custom style
     fig.add_trace(go.Bar(
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
-        marker_color='skyblue',
+        marker=dict(
+            color='rgba(0,123,255,0.8)',
+            line=dict(color='rgba(0,123,255,1.0)', width=1.5)
+        ),
+        hovertemplate='%{x}<br>Total Tests: %{y}<extra></extra>',
+        width=0.5,
         yaxis='y1'
     ))
 
-    # Line for detection rate %
+    # Line chart: Detection rate
     fig.add_trace(go.Scatter(
         x=df['sub_area'],
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
-        marker=dict(color='red'),
+        line=dict(shape='spline', color='crimson', width=3),
+        marker=dict(size=8),
+        hovertemplate='%{x}<br>Detection Rate: %{y:.2f}%<extra></extra>',
         yaxis='y2'
     ))
 
-    # Layout with secondary y-axis
+    # Layout styling
     fig.update_layout(
-        title=f"Sub-area Detection Rate and Test Count ({bpdp})",
-        xaxis_title="Sub Area",
+        template='plotly_white',
+        height=500,
+        xaxis=dict(title='Sub Area'),
         yaxis=dict(
-            title="Total Tests",
-            side="left"
+            title='Total Tests',
+            showgrid=False,
+            titlefont=dict(color='rgba(0,123,255,1)'),
+            tickfont=dict(color='rgba(0,123,255,1)')
         ),
         yaxis2=dict(
-            title="Detection Rate (%)",
-            overlaying="y",
-            side="right",
-            range=[0, 100]
+            title='Detection Rate (%)',
+            overlaying='y',
+            side='right',
+            range=[0, 100],
+            titlefont=dict(color='crimson'),
+            tickfont=dict(color='crimson'),
+            showgrid=False
         ),
-        legend=dict(x=0.5, xanchor="center", orientation="h"),
-        height=500
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5
+        ),
+        plot_bgcolor='rgba(245, 245, 245, 1)',
+        margin=dict(t=60, b=40, l=40, r=40),
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
