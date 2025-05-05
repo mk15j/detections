@@ -1,7 +1,3 @@
-
-
-
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -105,8 +101,8 @@ else:
             # Hover text
             filtered['hover_text'] = (
                 "<b>Point:</b> " + filtered['points'] + "<br>"
-                + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
-                + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
+                # + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
+                # + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
                 + "<b>28-Day Positivity:</b> " + filtered['positivity'] + "<br>"
                 + "<b>Last 28 Days:</b><br>&nbsp;&nbsp;" + filtered['history']
             )
