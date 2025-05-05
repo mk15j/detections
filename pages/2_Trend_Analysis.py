@@ -53,26 +53,28 @@ for bpdp in summary['before_during'].unique():
 
     fig = go.Figure()
 
-    # Bar for number of tests
+    # Bar for number of tests with adjusted bar width
     fig.add_trace(go.Bar(
         x=df['sub_area'],
         y=df['total_tests'],
         name='Total Tests',
         marker_color='skyblue',
-        yaxis='y1'
+        yaxis='y1',
+        width=0.3  # Adjust bar thickness (default is 0.8)
     ))
 
-    # Line for detection rate %
+    # Line for detection rate % with custom color
     fig.add_trace(go.Scatter(
         x=df['sub_area'],
         y=df['detection_rate_percent'],
         name='Detection Rate (%)',
         mode='lines+markers',
         marker=dict(color='red'),
+        line=dict(color='#C00000'),  # Set line color to #C00000
         yaxis='y2'
     ))
 
-    # Layout with secondary y-axis
+    # Layout with secondary y-axis and adjusted bar thickness
     fig.update_layout(
         title=f"Sub-area Detection Rate and Test Count ({bpdp})",
         xaxis_title="Sub Area",
@@ -87,7 +89,9 @@ for bpdp in summary['before_during'].unique():
             range=[0, 100]
         ),
         legend=dict(x=0.5, xanchor="center", orientation="h"),
-        height=500
+        height=500,
+        bargap=0.2,  # Gap between bars
+        bargroupgap=0.1  # Gap between groups of bars (if applicable)
     )
 
     st.plotly_chart(fig, use_container_width=True)
