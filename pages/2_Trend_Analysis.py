@@ -165,7 +165,7 @@ fig.add_trace(go.Scatter(
     y=trend_y,
     name='Trend Line',
     mode='lines',
-    line=dict(color='#0d21a1', dash='dot'),  
+    line=dict(color='#90caf9', dash='dot'),  
     yaxis='y2'
 ))
 
