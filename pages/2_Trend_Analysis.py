@@ -56,7 +56,7 @@ for bpdp in summary['before_during'].unique():
         name='Total Tests',
         marker_color='#64b5f6', #neon orange
         yaxis='y1',
-        width=0.1  # Adjust bar thickness (default is 0.8)
+        width=0.3  # Adjust bar thickness (default is 0.8)
     ))
 
     # Line for detection rate % with custom color
