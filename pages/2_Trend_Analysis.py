@@ -87,7 +87,7 @@ for bpdp in summary['before_during'].unique():
         ),
         legend=dict(x=0.2, xanchor="center", orientation="h"),
         height=500,
-        bargap=0.1,  # Gap between bars
+        bargap=0.05,  # Gap between bars
         bargroupgap=0.1  # Gap between groups of bars (if applicable)
     )
 
@@ -186,7 +186,7 @@ fig.update_layout(
     ),
     legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
-    bargap=0.2,
+    bargap=0.05,
     bargroupgap=0.1
 )
 
