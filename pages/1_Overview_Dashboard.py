@@ -104,7 +104,7 @@ fig.update_layout(
     xaxis_title="Sample Date",
     yaxis_title="Number of Samples",
     legend_title="Detection Result",
-    bargap=0.05  # 👈 Add this line to increase bar thickness
+    bargap=0.02  # 👈 Add this line to increase bar thickness
 )
 st.plotly_chart(fig, use_container_width=True)
 
