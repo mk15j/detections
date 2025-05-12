@@ -652,3 +652,85 @@ fig.update_layout(
 
 # Streamlit chart
 st.plotly_chart(fig, use_container_width=True, key='before_production_trend')
+
+
+
+
+
+
+
+# Filter for 'During Production'
+filtered = data[data['before_during'] == 'DP']
+
+# Ensure date column is datetime
+filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
+
+# Group by Date
+date_summary = filtered.groupby('sample_date')['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# Calculate detection rate
+date_summary['detection_rate_percent'] = (
+    (date_summary['detected_tests'] / date_summary['total_samples']) * 100
+).round(1)
+
+# Sort by date
+date_summary = date_summary.sort_values(by='sample_date')
+
+# Create chart
+fig = go.Figure()
+
+# Bar for total samples
+fig.add_trace(go.Bar(
+    x=date_summary['sample_date'],
+    y=date_summary['total_samples'],
+    name='Total Samples',
+    marker_color='#bbdefb',
+    yaxis='y1'
+))
+
+# Line for detection rate
+fig.add_trace(go.Scatter(
+    x=date_summary['sample_date'],
+    y=date_summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    line=dict(color='crimson', width=2),
+    yaxis='y2'
+))
+
+# Layout with top legend and all date ticks
+fig.update_layout(
+    title='# Samples vs Detection Rate During Production',
+    xaxis=dict(
+        title='Date',
+        type='date',
+        tickangle=-90,
+        tickformat='%d-%b',  # e.g., 12-May
+        dtick='D1',          # Force daily tick labels
+        rangeslider=dict(
+            visible=True,
+            thickness=0.05,
+            bgcolor='lightgrey',
+            bordercolor='grey',
+            borderwidth=1
+        ),
+        showgrid=True
+    ),
+    yaxis=dict(title='Total Samples', side='left'),
+    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.1,  # Above chart
+        xanchor='center',
+        x=0.5
+    ),
+    height=500
+)
+
+# Streamlit chart
+st.plotly_chart(fig, use_container_width=True, key='during_production_trend')
+
