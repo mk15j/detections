@@ -620,14 +620,15 @@ fig.add_trace(go.Scatter(
     yaxis='y2'
 ))
 
-# Layout with vertical labels and short date format
+# Layout with top legend and all date ticks
 fig.update_layout(
     title='# Samples vs Detection Rate before Production',
     xaxis=dict(
         title='Date',
         type='date',
-        tickangle=-90,             # Vertical labels
-        tickformat='%d-%b',        # Short format like 12-May
+        tickangle=-90,
+        tickformat='%d-%b',  # e.g., 12-May
+        dtick='D1',          # Force daily tick labels
         rangeslider=dict(
             visible=True,
             thickness=0.05,
@@ -639,7 +640,13 @@ fig.update_layout(
     ),
     yaxis=dict(title='Total Samples', side='left'),
     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
-    legend=dict(orientation='h', yanchor='bottom', y=-0.3, xanchor='center', x=0.5),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.1,  # Above chart
+        xanchor='center',
+        x=0.5
+    ),
     height=500
 )
 
