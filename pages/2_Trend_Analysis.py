@@ -192,3 +192,93 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+
+# Group by week and compute test stats
+grouped = data.groupby(['week'])
+summary = grouped['test_result'].agg(
+    total_tests='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+summary['detection_rate_percent'] = (
+    (summary['detected_tests'] / summary['total_tests']) * 100
+).round(1)
+
+# Extract numeric week for sorting
+summary['week_num'] = summary['week'].str.extract(r'Week-(\d+)').astype(int)
+summary = summary.sort_values('week_num')
+
+# Trend line (optional)
+x_vals = summary['week_num']
+y_vals = summary['detection_rate_percent']
+slope, intercept = np.polyfit(x_vals, y_vals, 1)
+trend_y = slope * x_vals + intercept
+
+# 📊 Combined chart
+st.subheader("📈 Weekly Detection Analysis")
+
+fig = go.Figure()
+
+# Bar: Sample Count (Total Tests)
+fig.add_trace(go.Bar(
+    x=summary['week'],
+    y=summary['total_tests'],
+    name='Sample Count',
+    marker_color='#64b5f6',
+    yaxis='y1',
+    width=0.25
+))
+
+# Bar: Detected Count
+fig.add_trace(go.Bar(
+    x=summary['week'],
+    y=summary['detected_tests'],
+    name='Detected Count',
+    marker_color='#1976d2',
+    yaxis='y1',
+    width=0.25
+))
+
+# Line: Detection Rate (%)
+fig.add_trace(go.Scatter(
+    x=summary['week'],
+    y=summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    line=dict(color='#C00000', width=2),
+    marker=dict(size=6),
+    yaxis='y2'
+))
+
+# Optional trend line (dotted)
+fig.add_trace(go.Scatter(
+    x=summary['week'],
+    y=trend_y,
+    name='Trend Line',
+    mode='lines',
+    line=dict(color='gray', dash='dot'),
+    yaxis='y2'
+))
+
+# Layout
+fig.update_layout(
+    title="📊 Weekly Detection Rate vs Sample Volume",
+    xaxis=dict(title="Week"),
+    yaxis=dict(
+        title="Sample / Detected Count",
+        side="left"
+    ),
+    yaxis2=dict(
+        title="Detection Rate (%)",
+        overlaying="y",
+        side="right",
+        range=[0, 100]
+    ),
+    barmode='group',
+    legend=dict(x=0.01, y=1.15, orientation="h"),
+    height=550,
+    bargap=0.1
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
