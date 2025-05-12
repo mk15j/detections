@@ -176,7 +176,7 @@ fig.update_layout(
     yaxis=dict(
         title="Total/Detected Tests",
         side="left",
-        range=[0, 100]
+        range=[0, 120]
     ),
     yaxis2=dict(
         title="Detection Rate (%)",
