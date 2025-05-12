@@ -447,3 +447,62 @@ fig.update_layout(
 
 # Display in Streamlit with unique key
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
+
+# Filter for 'Before Production'
+filtered = data[data['test_stage'] == 'Before Production']
+
+# Ensure date column is datetime
+filtered['date'] = pd.to_datetime(filtered['date'])
+
+# Group by Date
+date_summary = filtered.groupby('date')['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# Calculate detection rate
+date_summary['detection_rate_percent'] = (
+    (date_summary['detected_tests'] / date_summary['total_samples']) * 100
+).round(1)
+
+# Sort by date
+date_summary = date_summary.sort_values(by='date')
+
+# Create chart
+fig = go.Figure()
+
+# Bar for total samples
+fig.add_trace(go.Bar(
+    x=date_summary['date'],
+    y=date_summary['total_samples'],
+    name='Total Samples',
+    marker_color='#bbdefb',
+    yaxis='y1'
+))
+
+# Line for detection rate
+fig.add_trace(go.Scatter(
+    x=date_summary['date'],
+    y=date_summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    line=dict(color='crimson', width=2),
+    yaxis='y2'
+))
+
+# Layout
+fig.update_layout(
+    title='# Samples vs Detection Rate before Production',
+    xaxis=dict(
+        title='Date',
+        rangeslider=dict(visible=True),  # Scrollable X-axis
+        type='date'
+    ),
+    yaxis=dict(title='Total Samples', side='left'),
+    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+    legend=dict(orientation='h', yanchor='bottom', y=-0.3, xanchor='center', x=0.5),
+    height=500
+)
+
+# Streamlit chart
+st.plotly_chart(fig, use_container_width=True, key='before_production_trend')
