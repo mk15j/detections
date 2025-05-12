@@ -292,30 +292,30 @@ area_summary['detection_rate_percent'] = (
     (area_summary['detected_tests'] / area_summary['total_tests']) * 100
 ).round(1)
 
-# Sort by detection rate for better visualization
+# Sort by detection rate for better readability
 area_summary = area_summary.sort_values(by='detection_rate_percent', ascending=False)
 
-# Plot column chart
-fig = px.bar(
-    area_summary,
-    x='sub_area',
-    y='detection_rate_percent',
-    text='detection_rate_percent',
-    labels={'sub_area': 'Area', 'detection_rate_percent': 'Detection Rate (%)'},
-    title='📍 Detection Rate by Area',
-    color='detection_rate_percent',
-    color_continuous_scale='Reds'
-)
+# Plot bar chart using go.Figure for full control
+fig = go.Figure()
 
-# Format chart
-fig.update_traces(texttemplate='%{text}%', textposition='outside')
+fig.add_trace(go.Bar(
+    x=area_summary['sub_area'],
+    y=area_summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    marker_color='#bbdefb',
+    text=area_summary['detection_rate_percent'],
+    textposition='outside'
+))
+
+# Layout updates
 fig.update_layout(
-    yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
+    title='📍 Detection Rate by Area',
     xaxis=dict(title='Area'),
+    yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
     height=500,
+    legend=dict(title='Legend', orientation='h', y=-0.2),
     uniformtext_minsize=8,
     uniformtext_mode='hide'
 )
 
 st.plotly_chart(fig, use_container_width=True)
-
