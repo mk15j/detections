@@ -620,13 +620,14 @@ fig.add_trace(go.Scatter(
     yaxis='y2'
 ))
 
-# Layout with vertical date labels
+# Layout with vertical labels and short date format
 fig.update_layout(
     title='# Samples vs Detection Rate before Production',
     xaxis=dict(
         title='Date',
         type='date',
-        tickangle=-90,  # Rotate date labels vertically
+        tickangle=-90,             # Vertical labels
+        tickformat='%d-%b',        # Short format like 12-May
         rangeslider=dict(
             visible=True,
             thickness=0.05,
