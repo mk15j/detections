@@ -449,7 +449,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 
 # Filter for 'Before Production'
-filtered = data[data['test_stage'] == 'Before Production']
+filtered = data[data['before_during'] == 'BP']
 
 # Ensure date column is datetime
 filtered['date'] = pd.to_datetime(filtered['date'])
