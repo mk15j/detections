@@ -452,10 +452,10 @@ st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 filtered = data[data['before_during'] == 'BP']
 
 # Ensure date column is datetime
-filtered['date'] = pd.to_datetime(filtered['date'])
+filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
 
 # Group by Date
-date_summary = filtered.groupby('date')['test_result'].agg(
+date_summary = filtered.groupby('sample_date')['test_result'].agg(
     total_samples='count',
     detected_tests=lambda x: (x == 'Detected').sum()
 ).reset_index()
@@ -466,14 +466,14 @@ date_summary['detection_rate_percent'] = (
 ).round(1)
 
 # Sort by date
-date_summary = date_summary.sort_values(by='date')
+date_summary = date_summary.sort_values(by='sample_date')
 
 # Create chart
 fig = go.Figure()
 
 # Bar for total samples
 fig.add_trace(go.Bar(
-    x=date_summary['date'],
+    x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
     marker_color='#bbdefb',
@@ -482,7 +482,7 @@ fig.add_trace(go.Bar(
 
 # Line for detection rate
 fig.add_trace(go.Scatter(
-    x=date_summary['date'],
+    x=date_summary['sample_date'],
     y=date_summary['detection_rate_percent'],
     name='Detection Rate (%)',
     mode='lines+markers',
