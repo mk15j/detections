@@ -206,7 +206,7 @@ fig.add_trace(go.Scatter(
 #     bargroupgap=0.1
 # )
 fig.update_layout(
-    title="Detection Summary (All Production Phases)",
+    title="Detection Summary by Week",
     yaxis=dict(
         title="Total/Detected Tests",
         side="left",
@@ -418,7 +418,7 @@ fig.add_trace(go.Bar(
 
 # Layout settings
 fig.update_layout(
-    title='📍 Detection Rate by Area (Alphabetical)',
+    title='📍 Detection Rate by Area',
     xaxis=dict(title='Area', categoryorder='array', categoryarray=area_summary['sub_area']),
     yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
     height=500,
