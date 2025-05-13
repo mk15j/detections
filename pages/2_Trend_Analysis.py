@@ -128,14 +128,32 @@ st.subheader("Detection Summary")
 
 fig = go.Figure()
 
+# # Bar for total tests
+# fig.add_trace(go.Bar(
+#     x=summary['week'],
+#     y=summary['total_tests'],
+#     name='Total Tests',
+#     marker_color='#bbdefb',
+#     yaxis='y1',
+#     width=0.2
+# ))
+
+# # Bar for detected tests
+# fig.add_trace(go.Bar(
+#     x=summary['week'],
+#     y=summary['detected_tests'],
+#     name='Detected Tests',
+#     marker_color='#42a5f5',
+#     yaxis='y1',
+#     width=0.2
+# ))
 # Bar for total tests
 fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
     marker_color='#bbdefb',
-    yaxis='y1',
-    width=0.2
+    yaxis='y1'
 ))
 
 # Bar for detected tests
@@ -144,10 +162,8 @@ fig.add_trace(go.Bar(
     y=summary['detected_tests'],
     name='Detected Tests',
     marker_color='#42a5f5',
-    yaxis='y1',
-    width=0.2
+    yaxis='y1'
 ))
-
 # Line for detection rate %
 fig.add_trace(go.Scatter(
     x=summary['week'],
@@ -169,10 +185,28 @@ fig.add_trace(go.Scatter(
     yaxis='y2'
 ))
 
-# Layout
+# # Layout
+# fig.update_layout(
+#     title="Detection Summary (All Production Phases)",
+#     # xaxis_title="Week",
+#     yaxis=dict(
+#         title="Total/Detected Tests",
+#         side="left",
+#         range=[0, 200]
+#     ),
+#     yaxis2=dict(
+#         title="Detection Rate (%)",
+#         overlaying="y",
+#         side="right",
+#         range=[0, 100]
+#     ),
+#     legend=dict(x=0.2, xanchor="center", orientation="h"),
+#     height=500,
+#     bargap=0.05,
+#     bargroupgap=0.1
+# )
 fig.update_layout(
     title="Detection Summary (All Production Phases)",
-    # xaxis_title="Week",
     yaxis=dict(
         title="Total/Detected Tests",
         side="left",
@@ -186,8 +220,8 @@ fig.update_layout(
     ),
     legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
-    bargap=0.05,
-    bargroupgap=0.1
+    bargap=0,         # Remove gap between bars of different x
+    bargroupgap=0     # Remove gap between grouped bars (same x)
 )
 
 st.plotly_chart(fig, use_container_width=True)
