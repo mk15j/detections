@@ -170,8 +170,8 @@ fig.add_trace(go.Scatter(
     y=summary['detection_rate_percent'],
     name='Detection Rate (%)',
     mode='lines+markers',
-    marker=dict(color='#1976d2'),
-    line=dict(color='#1976d2'),
+    marker=dict(color='#C00000'),
+    line=dict(color='#C00000'),
     yaxis='y2'
 ))
 
