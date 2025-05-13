@@ -149,7 +149,7 @@ fig.add_trace(go.Bar(
 fig.update_layout(
     title='📍 Detection Rate by Area',
     xaxis=dict(title='Area', categoryorder='array', categoryarray=area_summary['sub_area']),
-    yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
+    yaxis=dict(title='Detection Rate (%)', range=[0, 60]),
     height=500,
     legend=dict(title='Legend', orientation='h', y=-0.2),
     uniformtext_minsize=8,
