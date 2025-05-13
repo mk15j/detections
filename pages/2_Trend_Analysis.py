@@ -21,77 +21,77 @@ if st.sidebar.button("Logout"):
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
 
-# Ensure necessary fields are present
-required_columns = ['sub_area', 'before_during', 'test_result']
-if not all(col in data.columns for col in required_columns):
-    st.error("Missing required columns in MongoDB data.")
-    st.stop()
+# # Ensure necessary fields are present
+# required_columns = ['sub_area', 'before_during', 'test_result']
+# if not all(col in data.columns for col in required_columns):
+#     st.error("Missing required columns in MongoDB data.")
+#     st.stop()
 
-# Standardize column values
-data['before_during'] = data['before_during'].str.upper()
-data['test_result'] = data['test_result'].str.strip()
+# # Standardize column values
+# data['before_during'] = data['before_during'].str.upper()
+# data['test_result'] = data['test_result'].str.strip()
 
-# Compute detection stats
-grouped = data.groupby(['sub_area', 'before_during'])
+# # Compute detection stats
+# grouped = data.groupby(['sub_area', 'before_during'])
 
-summary = grouped['test_result'].agg(
-    total_tests='count',
-    detected_tests=lambda x: (x == 'Detected').sum()
-).reset_index()
+# summary = grouped['test_result'].agg(
+#     total_tests='count',
+#     detected_tests=lambda x: (x == 'Detected').sum()
+# ).reset_index()
 
-summary['detection_rate_percent'] = ((summary['detected_tests'] / summary['total_tests']) * 100).round(1)
+# summary['detection_rate_percent'] = ((summary['detected_tests'] / summary['total_tests']) * 100).round(1)
 
-# Create combo chart for each before_during value
-for bpdp in summary['before_during'].unique():
-    st.subheader(f"Detection Summary for `{bpdp}`")
+# # Create combo chart for each before_during value
+# for bpdp in summary['before_during'].unique():
+#     st.subheader(f"Detection Summary for `{bpdp}`")
 
-    df = summary[summary['before_during'] == bpdp]
+#     df = summary[summary['before_during'] == bpdp]
 
-    fig = go.Figure()
+#     fig = go.Figure()
 
-    # Bar for number of tests with adjusted bar width
-    fig.add_trace(go.Bar(
-        x=df['sub_area'],
-        y=df['total_tests'],
-        name='Total Tests',
-        marker_color='#64b5f6', #neon orange
-        yaxis='y1',
-        width=0.3  # Adjust bar thickness (default is 0.8)
-    ))
+#     # Bar for number of tests with adjusted bar width
+#     fig.add_trace(go.Bar(
+#         x=df['sub_area'],
+#         y=df['total_tests'],
+#         name='Total Tests',
+#         marker_color='#64b5f6', #neon orange
+#         yaxis='y1',
+#         width=0.3  # Adjust bar thickness (default is 0.8)
+#     ))
 
-    # Line for detection rate % with custom color
-    fig.add_trace(go.Scatter(
-        x=df['sub_area'],
-        y=df['detection_rate_percent'],
-        name='Detection Rate (%)',
-        mode='lines+markers',
-        marker=dict(color='#0d21a1'),
-        line=dict(color='#0d47a1'),  # Set line color to #C00000
-        yaxis='y2'
-    ))
+#     # Line for detection rate % with custom color
+#     fig.add_trace(go.Scatter(
+#         x=df['sub_area'],
+#         y=df['detection_rate_percent'],
+#         name='Detection Rate (%)',
+#         mode='lines+markers',
+#         marker=dict(color='#0d21a1'),
+#         line=dict(color='#0d47a1'),  # Set line color to #C00000
+#         yaxis='y2'
+#     ))
 
-    # Layout with secondary y-axis and adjusted bar thickness
-    fig.update_layout(
-        title=f"Sub-area Detection Rate and Test Count ({bpdp})",
-        # xaxis_title="Sub Area",
-        yaxis=dict(
-            title="Total Tests",
-            side="left",
-            range=[0, 100]
-        ),
-        yaxis2=dict(
-            title="Detection Rate (%)",
-            overlaying="y",
-            side="right",
-            range=[0, 100]
-        ),
-        legend=dict(x=0.2, xanchor="center", orientation="h"),
-        height=500,
-        bargap=0.05,  # Gap between bars
-        bargroupgap=0.1  # Gap between groups of bars (if applicable)
-    )
+#     # Layout with secondary y-axis and adjusted bar thickness
+#     fig.update_layout(
+#         title=f"Sub-area Detection Rate and Test Count ({bpdp})",
+#         # xaxis_title="Sub Area",
+#         yaxis=dict(
+#             title="Total Tests",
+#             side="left",
+#             range=[0, 100]
+#         ),
+#         yaxis2=dict(
+#             title="Detection Rate (%)",
+#             overlaying="y",
+#             side="right",
+#             range=[0, 100]
+#         ),
+#         legend=dict(x=0.2, xanchor="center", orientation="h"),
+#         height=500,
+#         bargap=0.05,  # Gap between bars
+#         bargroupgap=0.1  # Gap between groups of bars (if applicable)
+#     )
 
-    st.plotly_chart(fig, use_container_width=True)
+#     st.plotly_chart(fig, use_container_width=True)
 
 
 
