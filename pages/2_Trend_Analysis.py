@@ -120,8 +120,14 @@ summary = summary.sort_values(by='week_num')
 # Fit a linear trend line to detection_rate_percent
 x_vals = summary['week_num']
 y_vals = summary['detection_rate_percent']
-slope, intercept = np.polyfit(x_vals, y_vals, 1)
-trend_y = slope * x_vals + intercept
+# slope, intercept = np.polyfit(x_vals, y_vals, 1)
+# trend_y = slope * x_vals + intercept
+
+# Fit a 2nd-degree polynomial trend line
+coeffs = np.polyfit(x_vals, y_vals, deg=2)
+poly = np.poly1d(coeffs)
+trend_y = poly(x_vals)
+
 
 # Create the combo chart
 st.subheader("Detection Summary")
