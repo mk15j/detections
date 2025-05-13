@@ -33,7 +33,13 @@ st.title("Listeria Sample Map Visualization")
 image_pil, image_base64, (width, height) = load_image_base64()
 
 # Get data with x and y
-all_data = list(listeria_collection.find({"x": {"$exists": True}, "y": {"$exists": True}}))
+# all_data = list(listeria_collection.find({"x": {"$exists": True}, "y": {"$exists": True}}))
+all_data = list(listeria_collection.find({
+    "x": {"$exists": True},
+    "y": {"$exists": True},
+    "fresh_smoked": "Fresh"
+}))
+
 if not all_data:
     st.warning("No data found with X and Y coordinates in MongoDB.")
 else:
