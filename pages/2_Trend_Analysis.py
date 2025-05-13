@@ -220,8 +220,8 @@ fig.update_layout(
     ),
     legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
-    bargap=0,         # Remove gap between bars of different x
-    bargroupgap=0     # Remove gap between grouped bars (same x)
+    bargap=0.3,        # Gap between weeks (x categories)
+    bargroupgap=0      # No gap between bars in the same group (Total vs Detected)
 )
 
 st.plotly_chart(fig, use_container_width=True)
