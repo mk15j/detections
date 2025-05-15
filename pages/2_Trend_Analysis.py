@@ -161,7 +161,7 @@ st.plotly_chart(fig, use_container_width=True)
 # st.plotly_chart(fig, use_container_width=True, key="detection_rate_by_area")
 
 
-# Group data
+# 2 Group data #
 area_summary = data.groupby('sub_area')['test_result'].agg(
     total_samples='count',
     detected_tests=lambda x: (x == 'Detected').sum()
@@ -212,7 +212,7 @@ fig.update_layout(
 # Display in Streamlit with unique key
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 
-# Filter for 'Before Production'
+# 3 Filter for 'Before Production'
 filtered = data[data['before_during'] == 'BP']
 
 # Ensure date column is datetime
@@ -288,7 +288,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True, key='before_production_trend')
 
 
-# Filter for 'During Production'
+# 4 Filter for 'During Production'
 filtered = data[data['before_during'] == 'DP']
 
 # Ensure date column is datetime
@@ -362,6 +362,85 @@ fig.update_layout(
 
 # Streamlit chart
 st.plotly_chart(fig, use_container_width=True, key='during_production_trend')
+
+
+# 5 Filter for 'Unmapped Samples'
+filtered = data[data['before_during'] == 'unmapped']
+
+# Ensure date column is datetime
+filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
+
+# Group by Date
+date_summary = filtered.groupby('sample_date')['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# Calculate detection rate
+date_summary['detection_rate_percent'] = (
+    (date_summary['detected_tests'] / date_summary['total_samples']) * 100
+).round(1)
+
+# Sort by date
+date_summary = date_summary.sort_values(by='sample_date')
+
+# Create chart
+fig = go.Figure()
+
+# Bar for total samples
+fig.add_trace(go.Bar(
+    x=date_summary['sample_date'],
+    y=date_summary['total_samples'],
+    name='Total Samples',
+    marker_color='#bbdefb',
+    yaxis='y1'
+))
+
+# Line for detection rate
+fig.add_trace(go.Scatter(
+    x=date_summary['sample_date'],
+    y=date_summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    line=dict(color='crimson', width=2),
+    yaxis='y2'
+))
+
+# Layout with top legend and all date ticks
+fig.update_layout(
+    title='# Unmapped Samples vs Detection Rate',
+    xaxis=dict(
+        title='Date',
+        type='date',
+        tickangle=-90,
+        tickformat='%d-%b',  # e.g., 12-May
+        dtick='D1',          # Force daily tick labels
+        rangeslider=dict(
+            visible=True,
+            thickness=0.05,
+            bgcolor='lightgrey',
+            bordercolor='grey',
+            borderwidth=1
+        ),
+        showgrid=True
+    ),
+    yaxis=dict(title='Total Samples', side='left'),
+    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.1,  # Above chart
+        xanchor='center',
+        x=0.5
+    ),
+    height=500
+)
+
+# Streamlit chart
+st.plotly_chart(fig, use_container_width=True, key='unmapped_trend')
+# 
+
+
 
 
 # Ensure datetime format
