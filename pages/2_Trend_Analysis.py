@@ -120,6 +120,109 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+# 
+
+# Compute detection stats by week (without categorizing by before_during)
+grouped = data.groupby(['sample_date'])
+
+summary = grouped['test_result'].agg(
+    total_tests='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+summary['detection_rate_percent'] = (
+    (summary['detected_tests'] / summary['total_tests']) * 100
+).round(1)
+
+# # Extract numeric part of week for proper sorting (e.g., "Week-12" → 12)
+# summary['week_num'] = summary['week'].str.extract(r'Week-(\d+)').astype(int)
+
+# # Sort by the extracted week number
+# summary = summary.sort_values(by='week_num')
+
+# Fit a linear trend line to detection_rate_percent
+x_vals = summary['sample_date']
+y_vals = summary['detection_rate_percent']
+# slope, intercept = np.polyfit(x_vals, y_vals, 1)
+# trend_y = slope * x_vals + intercept
+
+# Fit a 2nd-degree polynomial trend line
+coeffs = np.polyfit(x_vals, y_vals, deg=2)
+poly = np.poly1d(coeffs)
+trend_y = poly(x_vals)
+
+
+# Create the combo chart
+st.subheader("Detection Summary")
+
+fig = go.Figure()
+
+
+# Bar for total tests
+fig.add_trace(go.Bar(
+    x=summary['sample_date'],
+    y=summary['total_tests'],
+    name='Total Tests',
+    marker_color='#f2bb05',
+    yaxis='y1'
+))
+
+# Bar for detected tests
+fig.add_trace(go.Bar(
+    x=summary['sample_date'],
+    y=summary['detected_tests'],
+    name='Detected Tests',
+    marker_color='#d74e09',
+    yaxis='y1'
+))
+# Line for detection rate %
+fig.add_trace(go.Scatter(
+    x=summary['sample_date'],
+    y=summary['detection_rate_percent'],
+    name='Detection Rate (%)',
+    mode='lines+markers',
+    marker=dict(color='#C00000'),
+    line=dict(color='#C00000'),
+    yaxis='y2'
+))
+
+# Dotted trend line
+fig.add_trace(go.Scatter(
+    x=summary['sample_date'],
+    y=trend_y,
+    name='Trend Line',
+    mode='lines',
+    line=dict(color='#8b1e3f', dash='dot'),  
+    yaxis='y2'
+))
+
+
+fig.update_layout(
+    title="Detection Summary by Week",
+    yaxis=dict(
+        title="Total/Detected Tests",
+        side="left",
+        range=[0, 200]
+    ),
+    yaxis2=dict(
+        title="Detection Rate (%)",
+        overlaying="y",
+        side="right",
+        range=[0, 100]
+    ),
+    legend=dict(x=0.2, xanchor="center", orientation="h"),
+    height=500,
+    bargap=0.3,        # Gap between weeks (x categories)
+    bargroupgap=0      # No gap between bars in the same group (Total vs Detected)
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+# 
+
 
 # 2 Group data #
 area_summary = data.groupby('sub_area')['test_result'].agg(
