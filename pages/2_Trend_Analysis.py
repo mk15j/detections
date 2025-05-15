@@ -200,7 +200,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#f2bb05',
     yaxis='y1'
 ))
 
@@ -276,7 +276,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#f2bb05',
     yaxis='y1'
 ))
 
@@ -352,7 +352,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#f2bb05',
     yaxis='y1'
 ))
 
