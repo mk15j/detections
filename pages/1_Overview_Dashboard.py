@@ -96,7 +96,7 @@ fig = px.bar(
     barmode="group",
     color_discrete_map={
        "Detected": "#800f2f",       
-       "Not Detected": "#a4133c"   
+       "Not Detected": "#ffb3c1"   
     },
     template="plotly_dark"
 )
