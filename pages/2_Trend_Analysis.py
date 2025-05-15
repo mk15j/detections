@@ -182,7 +182,7 @@ fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#f2bb05',
     yaxis='y1'
 ))
 
