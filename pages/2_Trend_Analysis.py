@@ -64,7 +64,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#bbdefb',
+    marker_color='#f2bb05',
     yaxis='y1'
 ))
 
@@ -73,7 +73,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['detected_tests'],
     name='Detected Tests',
-    marker_color='#42a5f5',
+    marker_color='#d74e09',
     yaxis='y1'
 ))
 # Line for detection rate %
@@ -93,7 +93,7 @@ fig.add_trace(go.Scatter(
     y=trend_y,
     name='Trend Line',
     mode='lines',
-    line=dict(color='#90caf9', dash='dot'),  
+    line=dict(color='#8b1e3f', dash='dot'),  
     yaxis='y2'
 ))
 
