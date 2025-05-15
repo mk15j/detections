@@ -121,46 +121,6 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 
-# # Group by area and calculate detection rate
-# area_summary = data.groupby('sub_area')['test_result'].agg(
-#     total_tests='count',
-#     detected_tests=lambda x: (x == 'Detected').sum()
-# ).reset_index()
-
-# area_summary['detection_rate_percent'] = (
-#     (area_summary['detected_tests'] / area_summary['total_tests']) * 100
-# ).round(1)
-
-# # ✅ Sort by area name (alphabetical order)
-# area_summary = area_summary.sort_values(by='sub_area')
-
-# # Plot bar chart
-# fig = go.Figure()
-
-# fig.add_trace(go.Bar(
-#     x=area_summary['sub_area'],
-#     y=area_summary['detection_rate_percent'],
-#     name='Detection Rate (%)',
-#     marker_color='#bbdefb',
-#     text=area_summary['detection_rate_percent'],
-#     textposition='outside'
-# ))
-
-# # Layout settings
-# fig.update_layout(
-#     title='📍 Detection Rate by Area',
-#     xaxis=dict(title='Area', categoryorder='array', categoryarray=area_summary['sub_area']),
-#     yaxis=dict(title='Detection Rate (%)', range=[0, 60]),
-#     height=500,
-#     legend=dict(title='Legend', orientation='h', y=-0.2),
-#     uniformtext_minsize=8,
-#     uniformtext_mode='hide'
-# )
-
-# # ✅ Add a unique key to avoid duplicate element errors
-# st.plotly_chart(fig, use_container_width=True, key="detection_rate_by_area")
-
-
 # 2 Group data #
 area_summary = data.groupby('sub_area')['test_result'].agg(
     total_samples='count',
