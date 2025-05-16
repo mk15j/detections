@@ -151,22 +151,24 @@ else:
             )
 
             # st.plotly_chart(fig, use_container_width=True)
-            # Render Plotly figure with fixed dimensions
-                fig.update_layout(
-                    autosize=False,
-                    width=width,
-                    height=height,
-                )
-                
-                # Convert to HTML with scroll container
-                st.markdown(
-                    f"""
-                    <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
-                        {fig.to_html(include_plotlyjs='cdn', full_html=False)}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+            # Update figure dimensions to match image size
+            fig.update_layout(
+                autosize=False,
+                width=width,
+                height=height,
+            )
+            
+            # Embed Plotly chart with scrollable container
+            chart_html = fig.to_html(include_plotlyjs='cdn', full_html=False)
+            
+            st.markdown(
+                f"""
+                <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
+                    {chart_html}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
         else:
             st.warning("No data found for the selected date.")
