@@ -150,25 +150,25 @@ else:
                 title=f"Listeria Points on {selected_date}"
             )
 
-            # st.plotly_chart(fig, use_container_width=True)
-            # Update figure dimensions to match image size
-            fig.update_layout(
-                autosize=False,
-                width=width,
-                height=height,
-            )
+            st.plotly_chart(fig, use_container_width=True)
+            # # Update figure dimensions to match image size
+            # fig.update_layout(
+            #     autosize=False,
+            #     width=width,
+            #     height=height,
+            # )
             
-            # Embed Plotly chart with scrollable container
-            chart_html = fig.to_html(include_plotlyjs='cdn', full_html=False)
+            # # Embed Plotly chart with scrollable container
+            # chart_html = fig.to_html(include_plotlyjs='cdn', full_html=False)
             
-            st.markdown(
-                f"""
-                <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
-                    {chart_html}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            # st.markdown(
+            #     f"""
+            #     <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
+            #         {chart_html}
+            #     </div>
+            #     """,
+            #     unsafe_allow_html=True
+            # )
 
         else:
             st.warning("No data found for the selected date.")
