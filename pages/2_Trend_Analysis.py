@@ -156,20 +156,20 @@ fig.add_trace(go.Bar(
     x=summary['sample_date'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#f2bb05',
+    marker_color='#FF5F6B',
     yaxis='y1',
     opacity=0.6
 ))
 
-# Detected tests (bar)
-fig.add_trace(go.Bar(
-    x=summary['sample_date'],
-    y=summary['detected_tests'],
-    name='Detected Tests',
-    marker_color='#d74e09',
-    yaxis='y1',
-    opacity=0.6
-))
+# # Detected tests (bar)
+# fig.add_trace(go.Bar(
+#     x=summary['sample_date'],
+#     y=summary['detected_tests'],
+#     name='Detected Tests',
+#     marker_color='#d74e09',
+#     yaxis='y1',
+#     opacity=0.6
+# ))
 
 # Detection rate (line)
 fig.add_trace(go.Scatter(
@@ -182,15 +182,15 @@ fig.add_trace(go.Scatter(
     yaxis='y2'
 ))
 
-# Trend line (line)
-fig.add_trace(go.Scatter(
-    x=summary['sample_date'],
-    y=trend_y,
-    name='Trend Line',
-    mode='lines',
-    line=dict(color='#8b1e3f', dash='dot'),
-    yaxis='y2'
-))
+# # Trend line (line)
+# fig.add_trace(go.Scatter(
+#     x=summary['sample_date'],
+#     y=trend_y,
+#     name='Trend Line',
+#     mode='lines',
+#     line=dict(color='#8b1e3f', dash='dot'),
+#     yaxis='y2'
+# ))
 
 # Layout
 fig.update_layout(
