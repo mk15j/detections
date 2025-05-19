@@ -139,7 +139,7 @@ summary['detection_rate_percent'] = (
 # Sort by date for plotting
 summary = summary.sort_values(by='sample_date')
 
-# Fit a 2nd-degree polynomial trend line (convert dates to ordinals)
+# Fit a 2nd-degree polynomial trend line
 x_vals = summary['sample_date'].map(pd.Timestamp.toordinal)
 y_vals = summary['detection_rate_percent']
 coeffs = np.polyfit(x_vals, y_vals, deg=2)
@@ -196,29 +196,37 @@ fig.add_trace(go.Scatter(
 fig.update_layout(
     title="Detection Summary by Date",
     xaxis=dict(
-        title="Sample Date",
-        tickformat="%Y-%m-%d",
-        tickangle=45,
+        title='Sample Date',
         type='date',
+        tickangle=-90,
+        tickformat='%d-%b',  # Format like 12-May
+        dtick='D1',          # Show every date tick
+        rangeslider=dict(
+            visible=True,
+            thickness=0.05,
+            bgcolor='lightgrey',
+            bordercolor='grey',
+            borderwidth=1
+        ),
+        showgrid=True
     ),
-    yaxis=dict(
-        title="Total/Detected Tests",
-        side="left"
+    yaxis=dict(title='Total/Detected Tests', side='left'),
+    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.1,
+        xanchor='center',
+        x=0.5
     ),
-    yaxis2=dict(
-        title="Detection Rate (%)",
-        overlaying="y",
-        side="right",
-        range=[0, 100]
-    ),
-    legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
     bargap=0.2,
     bargroupgap=0,
-    barmode='overlay'  # <- This avoids side-by-side bars
+    barmode='overlay'  # Prevent bar grouping
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key='detection_summary_trend')
+
 ###############################################
 
 # 2 Group data #
