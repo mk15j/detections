@@ -55,7 +55,7 @@ trend_y = poly(x_vals)
 
 
 # Create the combo chart
-st.subheader("Detection Summary")
+# st.subheader("Detection Summary")
 
 fig = go.Figure()
 
@@ -147,7 +147,7 @@ poly = np.poly1d(coeffs)
 trend_y = poly(x_vals)
 
 # Plot combo chart
-st.subheader("Detection Summary by Date")
+# st.subheader("Detection Summary by Date")
 
 fig = go.Figure()
 
