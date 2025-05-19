@@ -157,7 +157,8 @@ fig.add_trace(go.Bar(
     y=summary['total_tests'],
     name='Total Tests',
     marker_color='#f2bb05',
-    yaxis='y1'
+    yaxis='y1',
+    opacity=0.6
 ))
 
 # Detected tests (bar)
@@ -166,7 +167,8 @@ fig.add_trace(go.Bar(
     y=summary['detected_tests'],
     name='Detected Tests',
     marker_color='#d74e09',
-    yaxis='y1'
+    yaxis='y1',
+    opacity=0.6
 ))
 
 # Detection rate (line)
@@ -193,7 +195,12 @@ fig.add_trace(go.Scatter(
 # Layout
 fig.update_layout(
     title="Detection Summary by Date",
-    xaxis=dict(title="Sample Date"),
+    xaxis=dict(
+        title="Sample Date",
+        tickformat="%Y-%m-%d",
+        tickangle=45,
+        type='date',
+    ),
     yaxis=dict(
         title="Total/Detected Tests",
         side="left"
@@ -206,15 +213,14 @@ fig.update_layout(
     ),
     legend=dict(x=0.2, xanchor="center", orientation="h"),
     height=500,
-    bargap=0.3,
-    bargroupgap=0
+    bargap=0.2,
+    bargroupgap=0,
+    barmode='overlay'  # <- This avoids side-by-side bars
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
-
-#################################################
-
+###############################################
 
 # 2 Group data #
 area_summary = data.groupby('sub_area')['test_result'].agg(
