@@ -210,9 +210,9 @@ fig.update_layout(
         borderwidth=1
     ),
     showgrid=True
-),
-margin=dict(l=60, r=40, t=80, b=120),
-height=600
+    ),
+    margin=dict(l=60, r=40, t=80, b=120),
+    height=600
 
     
     # xaxis=dict(
