@@ -238,7 +238,7 @@ fig.update_layout(
         xanchor='center',
         x=0.5
     ),
-    margin=dict(l=60, r=40, t=80, b=120),
+    margin=dict(l=60, r=40, t=80, b=150),
     height=600,
     bargap=0.2,
     bargroupgap=0,
