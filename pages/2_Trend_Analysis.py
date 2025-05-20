@@ -315,7 +315,7 @@ fig.update_layout(
         dtick='D1',          # Force daily tick labels
         rangeslider=dict(
             visible=True,
-            thickness=0.01,
+            thickness=0.02,
             bgcolor='lightgrey',
             bordercolor='grey',
             borderwidth=1
@@ -391,7 +391,7 @@ fig.update_layout(
         dtick='D1',          # Force daily tick labels
         rangeslider=dict(
             visible=True,
-            thickness=0.05,
+            thickness=0.02,
             bgcolor='lightgrey',
             bordercolor='grey',
             borderwidth=1
@@ -467,7 +467,7 @@ fig.update_layout(
         dtick='D1',          # Force daily tick labels
         rangeslider=dict(
             visible=True,
-            thickness=0.05,
+            thickness=0.02,
             bgcolor='lightgrey',
             bordercolor='grey',
             borderwidth=1
@@ -488,63 +488,3 @@ fig.update_layout(
 
 # Streamlit chart
 st.plotly_chart(fig, use_container_width=True, key='unmapped_trend')
-# 
-
-
-
-
-# # Ensure datetime format
-# data['sample_date'] = pd.to_datetime(data['sample_date'])
-
-# # Group and pivot to get counts for BP and DP
-# summary = data.groupby(['sample_date', 'before_during'])['test_result'].count().reset_index()
-# summary = summary.pivot(index='sample_date', columns='before_during', values='test_result').fillna(0)
-# summary = summary.sort_index()
-
-# # Rename columns if necessary
-# summary = summary.rename(columns={'BP': 'Before Production', 'DP': 'During Production'})
-
-# # Create chart
-# fig = go.Figure()
-
-# # Add BP bars
-# fig.add_trace(go.Bar(
-#     x=summary.index,
-#     y=summary['Before Production'],
-#     name='Before Production',
-#     marker_color='#64b5f6'
-# ))
-
-# # Add DP bars
-# fig.add_trace(go.Bar(
-#     x=summary.index,
-#     y=summary['During Production'],
-#     name='During Production',
-#     marker_color='#ffb74d'
-# ))
-
-# # Layout
-# fig.update_layout(
-#     title='Total Samples: Before vs During Production',
-#     barmode='group',
-#     xaxis=dict(
-#         title='Date',
-#         tickangle=-90,
-#         tickformat='%d-%b',
-#         dtick='D1',
-#         type='date'
-#     ),
-#     yaxis=dict(title='Total Samples'),
-#     legend=dict(
-#         orientation='h',
-#         yanchor='bottom',
-#         y=1.1,
-#         xanchor='center',
-#         x=0.5
-#     ),
-#     height=500
-# )
-
-# # Streamlit chart
-# st.plotly_chart(fig, use_container_width=True, key='bp_dp_comparison')
-
