@@ -204,7 +204,7 @@ fig.update_layout(
     dtick='D1',
     rangeslider=dict(
         visible=True,
-        thickness=0.03,
+        thickness=0.01,
         bgcolor='lightgrey',
         bordercolor='grey',
         borderwidth=1
