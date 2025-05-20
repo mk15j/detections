@@ -211,8 +211,7 @@ fig.update_layout(
     ),
     showgrid=True
     ),
-    margin=dict(l=60, r=40, t=80, b=120),
-    height=600
+    
 
     
     # xaxis=dict(
@@ -239,7 +238,8 @@ fig.update_layout(
         xanchor='center',
         x=0.5
     ),
-    height=500,
+    margin=dict(l=60, r=40, t=80, b=120),
+    height=600,
     bargap=0.2,
     bargroupgap=0,
     barmode='overlay'  # Prevent bar grouping
