@@ -161,16 +161,6 @@ fig.add_trace(go.Bar(
     opacity=0.6
 ))
 
-# # Detected tests (bar)
-# fig.add_trace(go.Bar(
-#     x=summary['sample_date'],
-#     y=summary['detected_tests'],
-#     name='Detected Tests',
-#     marker_color='#d74e09',
-#     yaxis='y1',
-#     opacity=0.6
-# ))
-
 # Detection rate (line)
 fig.add_trace(go.Scatter(
     x=summary['sample_date'],
@@ -181,16 +171,6 @@ fig.add_trace(go.Scatter(
     line=dict(color='#C00000'),
     yaxis='y2'
 ))
-
-# # Trend line (line)
-# fig.add_trace(go.Scatter(
-#     x=summary['sample_date'],
-#     y=trend_y,
-#     name='Trend Line',
-#     mode='lines',
-#     line=dict(color='#8b1e3f', dash='dot'),
-#     yaxis='y2'
-# ))
 
 # Layout
 fig.update_layout(
@@ -211,24 +191,6 @@ fig.update_layout(
     ),
     showgrid=True
     ),
-    
-
-    
-    # xaxis=dict(
-    #     title='Sample Date',
-    #     type='date',
-    #     tickangle=-90,
-    #     tickformat='%d-%b',  # Format like 12-May
-    #     dtick='D1',          # Show every date tick
-    #     rangeslider=dict(
-    #         visible=True,
-    #         thickness=0.05,
-    #         bgcolor='lightgrey',
-    #         bordercolor='grey',
-    #         borderwidth=1
-    #     ),
-    #     showgrid=True
-    # ),
     yaxis=dict(title='Total/Detected Tests', side='left'),
     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
     legend=dict(
@@ -353,7 +315,7 @@ fig.update_layout(
         dtick='D1',          # Force daily tick labels
         rangeslider=dict(
             visible=True,
-            thickness=0.05,
+            thickness=0.01,
             bgcolor='lightgrey',
             bordercolor='grey',
             borderwidth=1
