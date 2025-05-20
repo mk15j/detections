@@ -195,21 +195,41 @@ fig.add_trace(go.Scatter(
 # Layout
 fig.update_layout(
     title="Detection Summary by Date",
+
     xaxis=dict(
-        title='Sample Date',
-        type='date',
-        tickangle=-90,
-        tickformat='%d-%b',  # Format like 12-May
-        dtick='D1',          # Show every date tick
-        rangeslider=dict(
-            visible=True,
-            thickness=0.05,
-            bgcolor='lightgrey',
-            bordercolor='grey',
-            borderwidth=1
-        ),
-        showgrid=True
+    title='Sample Date',
+    type='date',
+    tickangle=-90,
+    tickformat='%d-%b',
+    dtick='D1',
+    rangeslider=dict(
+        visible=True,
+        thickness=0.03,
+        bgcolor='lightgrey',
+        bordercolor='grey',
+        borderwidth=1
     ),
+    showgrid=True
+),
+margin=dict(l=60, r=40, t=80, b=120),
+height=600
+
+    
+    # xaxis=dict(
+    #     title='Sample Date',
+    #     type='date',
+    #     tickangle=-90,
+    #     tickformat='%d-%b',  # Format like 12-May
+    #     dtick='D1',          # Show every date tick
+    #     rangeslider=dict(
+    #         visible=True,
+    #         thickness=0.05,
+    #         bgcolor='lightgrey',
+    #         bordercolor='grey',
+    #         borderwidth=1
+    #     ),
+    #     showgrid=True
+    # ),
     yaxis=dict(title='Total/Detected Tests', side='left'),
     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
     legend=dict(
