@@ -69,14 +69,14 @@ fig.add_trace(go.Bar(
     yaxis='y1'
 ))
 
-# Bar for detected tests
-fig.add_trace(go.Bar(
-    x=summary['week'],
-    y=summary['detected_tests'],
-    name='Detected Tests',
-    marker_color='#DC143C',
-    yaxis='y1'
-))
+# # Bar for detected tests
+# fig.add_trace(go.Bar(
+#     x=summary['week'],
+#     y=summary['detected_tests'],
+#     name='Detected Tests',
+#     marker_color='#DC143C',
+#     yaxis='y1'
+# ))
 # Line for detection rate %
 fig.add_trace(go.Scatter(
     x=summary['week'],
