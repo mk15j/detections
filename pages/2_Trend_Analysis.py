@@ -338,8 +338,8 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 
 
-# Display in Streamlit with unique key
-st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
+# # Display in Streamlit with unique key
+# st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 
 # 3 Filter for 'Before Production'
 filtered = data[data['before_during'] == 'BP']
