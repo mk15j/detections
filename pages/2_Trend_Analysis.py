@@ -211,24 +211,78 @@ st.plotly_chart(fig, use_container_width=True, key='detection_summary_trend')
 
 ###############################################
 
-# 2 Group data #
-area_summary = data.groupby('sub_area')['test_result'].agg(
-    total_samples='count',
-    detected_tests=lambda x: (x == 'Detected').sum()
-).reset_index()
+# # 2 Group data #
+# area_summary = data.groupby('sub_area')['test_result'].agg(
+#     total_samples='count',
+#     detected_tests=lambda x: (x == 'Detected').sum()
+# ).reset_index()
 
-# Calculate detection rate
-area_summary['detection_rate_percent'] = (
-    (area_summary['detected_tests'] / area_summary['total_samples']) * 100
-).round(1)
+# # Calculate detection rate
+# area_summary['detection_rate_percent'] = (
+#     (area_summary['detected_tests'] / area_summary['total_samples']) * 100
+# ).round(1)
 
-# Sort areas alphabetically
-area_summary = area_summary.sort_values(by='sub_area')
+# # Sort areas alphabetically
+# area_summary = area_summary.sort_values(by='sub_area')
 
-# Create figure
+# # Create figure
+# fig = go.Figure()
+
+# # Bar for # Samples
+# fig.add_trace(go.Bar(
+#     x=area_summary['sub_area'],
+#     y=area_summary['total_samples'],
+#     name='Total Samples',
+#     marker_color='#bbdefb',
+#     yaxis='y1'
+# ))
+
+# # Line for % Detection Rate
+# fig.add_trace(go.Scatter(
+#     x=area_summary['sub_area'],
+#     y=area_summary['detection_rate_percent'],
+#     name='Detection Rate (%)',
+#     mode='lines+markers+text',
+#     text=area_summary['detection_rate_percent'],
+#     textposition='top center',
+#     yaxis='y2',
+#     line=dict(color='crimson', width=3)
+# ))
+
+# # Layout
+# fig.update_layout(
+#     title='# Samples vs % Detection Rate by Area',
+#     xaxis=dict(title='Area', categoryorder='array', categoryarray=area_summary['sub_area']),
+#     yaxis=dict(title='Total Samples', side='left', showgrid=False),
+#     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+#     legend=dict(orientation='h', yanchor='bottom', y=-0.3, xanchor='center', x=0.5),
+#     height=500
+# )
+
+
+# Define custom order
+custom_order = [
+    # Fresh
+    'Raw Material', 'Deheading', 'Deskinner', 'Filleting', 'Trimming',
+    'Deboning', 'Injector', 'Lock', 'Other',
+    # Smoking + Packing
+    'Smoking Chamber', 'Smoking Tray', 'Slicer 1', 'Slicer 2', 'Packing 1', 'Lock', 'Other',
+    # Unmapped
+    'Unmapped'
+]
+
+# Remove duplicates while preserving order
+from collections import OrderedDict
+custom_order = list(OrderedDict.fromkeys(custom_order))
+
+# Ensure sub_area is categorical and sorted by custom order
+area_summary['sub_area'] = pd.Categorical(area_summary['sub_area'], categories=custom_order, ordered=True)
+area_summary = area_summary.sort_values('sub_area')
+
+# Plot
 fig = go.Figure()
 
-# Bar for # Samples
+# Bar for Total Samples
 fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
@@ -237,7 +291,7 @@ fig.add_trace(go.Bar(
     yaxis='y1'
 ))
 
-# Line for % Detection Rate
+# Line for Detection Rate
 fig.add_trace(go.Scatter(
     x=area_summary['sub_area'],
     y=area_summary['detection_rate_percent'],
@@ -251,13 +305,20 @@ fig.add_trace(go.Scatter(
 
 # Layout
 fig.update_layout(
-    title='# Samples vs % Detection Rate by Area',
-    xaxis=dict(title='Area', categoryorder='array', categoryarray=area_summary['sub_area']),
+    title='# Samples vs % Detection Rate by Area (Process Flow)',
+    xaxis=dict(
+        title='Sub Area (Process Flow)',
+        categoryorder='array',
+        categoryarray=custom_order
+    ),
     yaxis=dict(title='Total Samples', side='left', showgrid=False),
     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
     legend=dict(orientation='h', yanchor='bottom', y=-0.3, xanchor='center', x=0.5),
     height=500
 )
+
+# Streamlit display
+st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
 
 # Display in Streamlit with unique key
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
@@ -336,6 +397,13 @@ fig.update_layout(
 
 # Streamlit chart
 st.plotly_chart(fig, use_container_width=True, key='before_production_trend')
+
+
+
+
+
+
+
 
 
 # 4 Filter for 'During Production'
