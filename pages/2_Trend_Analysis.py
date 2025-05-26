@@ -65,7 +65,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1'
 ))
 
@@ -156,7 +156,7 @@ fig.add_trace(go.Bar(
     x=summary['sample_date'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1',
     opacity=0.6
 ))
@@ -233,7 +233,7 @@ fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
     name='Total Samples',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1'
 ))
 
@@ -290,7 +290,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1'
 ))
 
@@ -366,7 +366,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1'
 ))
 
@@ -442,7 +442,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#FF5F6B',
+    marker_color='#bbdefb',
     yaxis='y1'
 ))
 
