@@ -74,7 +74,7 @@ fig.add_trace(go.Bar(
 #     x=summary['week'],
 #     y=summary['detected_tests'],
 #     name='Detected Tests',
-#     marker_color='#DC143C',
+#     marker_color='#d2b7e5',
 #     yaxis='y1'
 # ))
 # Line for detection rate %
@@ -306,7 +306,7 @@ fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
     name='Total Samples',
-    marker_color='#a06cd5',
+    marker_color='#d2b7e5',
     yaxis='y1'
 ))
 
