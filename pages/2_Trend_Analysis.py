@@ -501,7 +501,7 @@ st.plotly_chart(fig, use_container_width=True, key='during_production_trend')
 
 
 # 5 Filter for 'Unmapped Samples'
-filtered = data[data['before_during'] == 'unmapped']
+filtered = data[data['before_during'] == 'Unmapped']
 
 # Ensure date column is datetime
 filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
