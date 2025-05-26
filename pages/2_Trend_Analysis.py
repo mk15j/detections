@@ -65,7 +65,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#bbdefb',
+    marker_color='#a06cd5',
     yaxis='y1'
 ))
 
@@ -156,7 +156,7 @@ fig.add_trace(go.Bar(
     x=summary['sample_date'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#bbdefb',
+    marker_color='#a06cd5',
     yaxis='y1',
     opacity=0.6
 ))
@@ -233,7 +233,7 @@ st.plotly_chart(fig, use_container_width=True, key='detection_summary_trend')
 #     x=area_summary['sub_area'],
 #     y=area_summary['total_samples'],
 #     name='Total Samples',
-#     marker_color='#bbdefb',
+#     marker_color='#a06cd5',
 #     yaxis='y1'
 # ))
 
@@ -306,7 +306,7 @@ fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#a06cd5',
     yaxis='y1'
 ))
 
@@ -369,7 +369,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#a06cd5',
     yaxis='y1'
 ))
 
@@ -452,7 +452,7 @@ fig.add_trace(go.Bar(
     x=date_summary['sample_date'],
     y=date_summary['total_samples'],
     name='Total Samples',
-    marker_color='#bbdefb',
+    marker_color='#a06cd5',
     yaxis='y1'
 ))
 
