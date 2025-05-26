@@ -95,8 +95,8 @@ fig = px.bar(
     title="Listeria Detection (Detected vs Not Detected) Over Time",
     barmode="group",
     color_discrete_map={
-       "Detected": "#DC143C",       
-       "Not Detected": "#FF5F6B"   
+       "Detected": "#a06cd5",       
+       "Not Detected": "#d2b7e5"   
     },
     template="plotly_dark"
 )
