@@ -306,7 +306,7 @@ fig.add_trace(go.Scatter(
 
 # Layout with top legend and all date ticks
 fig.update_layout(
-    title='# Samples vs Detection Rate before Production',
+    title='# Samples vs Detection Rate Before Production',
     xaxis=dict(
         title='Date',
         type='date',
