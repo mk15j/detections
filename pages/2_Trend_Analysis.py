@@ -88,15 +88,15 @@ fig.add_trace(go.Scatter(
     yaxis='y2'
 ))
 
-# Dotted trend line
-fig.add_trace(go.Scatter(
-    x=summary['week'],
-    y=trend_y,
-    name='Trend Line',
-    mode='lines',
-    line=dict(color='#8b1e3f', dash='dot'),  
-    yaxis='y2'
-))
+# # Dotted trend line
+# fig.add_trace(go.Scatter(
+#     x=summary['week'],
+#     y=trend_y,
+#     name='Trend Line',
+#     mode='lines',
+#     line=dict(color='#8b1e3f', dash='dot'),  
+#     yaxis='y2'
+# ))
 
 
 fig.update_layout(
