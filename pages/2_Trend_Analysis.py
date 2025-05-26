@@ -260,29 +260,48 @@ st.plotly_chart(fig, use_container_width=True, key='detection_summary_trend')
 # )
 
 
-# Define custom order
+import plotly.graph_objects as go
+from collections import OrderedDict
+
+# Step 1: Group data
+area_summary = data.groupby('sub_area')['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# Step 2: Calculate detection rate
+area_summary['detection_rate_percent'] = (
+    (area_summary['detected_tests'] / area_summary['total_samples']) * 100
+).round(1)
+
+# Step 3: Define custom x-axis order
 custom_order = [
     # Fresh
     'Raw Material', 'Deheading', 'Deskinner', 'Filleting', 'Trimming',
     'Deboning', 'Injector', 'Lock', 'Other',
     # Smoking + Packing
-    'Smoking Chamber', 'Smoking Tray', 'Slicer 1', 'Slicer 2', 'Packing 1', 'Lock', 'Other',
+    'Smoking Chamber', 'Smoking Tray', 'Slicer 1', 'Slicer 2',
+    'Packing 1', 'Lock', 'Other',
     # Unmapped
     'Unmapped'
 ]
 
-# Remove duplicates while preserving order
-from collections import OrderedDict
+# Remove duplicates while keeping order
 custom_order = list(OrderedDict.fromkeys(custom_order))
 
-# Ensure sub_area is categorical and sorted by custom order
-area_summary['sub_area'] = pd.Categorical(area_summary['sub_area'], categories=custom_order, ordered=True)
+# Step 4: Set sub_area as categorical using custom order
+area_summary['sub_area'] = pd.Categorical(
+    area_summary['sub_area'], 
+    categories=custom_order, 
+    ordered=True
+)
+
+# Step 5: Sort by the ordered category
 area_summary = area_summary.sort_values('sub_area')
 
-# Plot
+# Step 6: Create Plotly figure
 fig = go.Figure()
 
-# Bar for Total Samples
 fig.add_trace(go.Bar(
     x=area_summary['sub_area'],
     y=area_summary['total_samples'],
@@ -291,7 +310,6 @@ fig.add_trace(go.Bar(
     yaxis='y1'
 ))
 
-# Line for Detection Rate
 fig.add_trace(go.Scatter(
     x=area_summary['sub_area'],
     y=area_summary['detection_rate_percent'],
@@ -303,11 +321,10 @@ fig.add_trace(go.Scatter(
     line=dict(color='crimson', width=3)
 ))
 
-# Layout
 fig.update_layout(
     title='# Samples vs % Detection Rate by Area (Process Flow)',
     xaxis=dict(
-        title='Sub Area (Process Flow)',
+        title='Sub Area',
         categoryorder='array',
         categoryarray=custom_order
     ),
@@ -317,8 +334,9 @@ fig.update_layout(
     height=500
 )
 
-# Streamlit display
+# Step 7: Display in Streamlit
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
+
 
 # Display in Streamlit with unique key
 st.plotly_chart(fig, use_container_width=True, key="samples_vs_detection_rate")
