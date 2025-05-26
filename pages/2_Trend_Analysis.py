@@ -65,7 +65,7 @@ fig.add_trace(go.Bar(
     x=summary['week'],
     y=summary['total_tests'],
     name='Total Tests',
-    marker_color='#b185db',
+    marker_color='#dac3e8',
     yaxis='y1'
 ))
 
