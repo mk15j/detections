@@ -89,63 +89,60 @@ if st.sidebar.button("Logout"):
 st.title("📁 Admin: Upload Listeria Results Data")
 
 uploaded_file = st.file_uploader("Upload Results File", type=["csv"])
-if uploaded_file is None:
-    st.warning("Please upload a CSV file.")
-    st.stop()
-
-try:
-    df = pd.read_csv(uploaded_file, encoding="utf-8", encoding_errors="replace")
-except Exception as e:
-    st.error(f"Error reading CSV file: {e}")
-    st.stop()
-
-st.write(df.head())  # Preview data
-
-# ✅ Required columns
-required_columns = {
-    "sample_code", "sample_description", "translated_description", "test_code", "test_result","unit", 
-    "analytical_report_code", "sample_date", "location_code", "fresh_smoked", "sub_area",
-    "before_during", "value", "week_num", "week", "x", "y","points"
-}
-if not required_columns.issubset(df.columns):
-    st.error(f"Missing required columns: {', '.join(required_columns - set(df.columns))}")
-    st.stop()
-
-# 🕓 Date parsing
-df["sample_date"] = pd.to_datetime(df["sample_date"], format="%d-%m-%Y", errors="coerce")
-df["sample_date"] = df["sample_date"].where(df["sample_date"].notna(), None)
-
-# 🧑 Add uploader info
-username = st.session_state.user.get("username", "admin")
-df["uploaded_by"] = username
-
-# 📤 Upload to MongoDB
-if st.button("Upload to MongoDB"):
+if uploaded_file:
     try:
-        data_list = df.to_dict(orient="records")
-        result = listeria_collection.insert_many(data_list)
-        st.success(f"✅ Inserted {len(result.inserted_ids)} records into the database!")
+        df = pd.read_csv(uploaded_file, encoding="utf-8", encoding_errors="replace")
     except Exception as e:
-        st.error(f"❌ Database Error: {e}")
+        st.error(f"Error reading CSV file: {e}")
+        st.stop()
+
+    st.write(df.head())  # Preview data
+
+    # ✅ Required columns
+    required_columns = {
+        "sample_code", "sample_description", "translated_description", "test_code", "test_result", "unit",
+        "analytical_report_code", "sample_date", "location_code", "fresh_smoked", "sub_area",
+        "before_during", "value", "week_num", "week", "x", "y", "points"
+    }
+
+    if not required_columns.issubset(df.columns):
+        st.error(f"Missing required columns: {', '.join(required_columns - set(df.columns))}")
+        st.stop()
+
+    # 🕓 Date parsing
+    df["sample_date"] = pd.to_datetime(df["sample_date"], format="%d-%m-%Y", errors="coerce")
+    df["sample_date"] = df["sample_date"].where(df["sample_date"].notna(), None)
+
+    # 🧑 Add uploader info
+    username = st.session_state.user.get("username", "admin")
+    df["uploaded_by"] = username
+
+    # 📤 Upload to MongoDB
+    if st.button("Upload to MongoDB"):
+        try:
+            data_list = df.to_dict(orient="records")
+            result = listeria_collection.insert_many(data_list)
+            st.success(f"✅ Inserted {len(result.inserted_ids)} records into the database!")
+        except Exception as e:
+            st.error(f"❌ Database Error: {e}")
 
 # 📥 Download existing MongoDB collection as CSV
 st.subheader("📥 Download MongoDB Data")
-if st.button("Download Listeria Collection as CSV"):
-    try:
-        data = list(listeria_collection.find({}))
-        if not data:
-            st.warning("⚠️ No data found in the collection.")
-        else:
-            df_export = pd.DataFrame(data)
-            if "_id" in df_export.columns:
-                df_export.drop(columns=["_id"], inplace=True)
-            csv = df_export.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="📄 Download CSV",
-                data=csv,
-                file_name="listeria_data.csv",
-                mime="text/csv"
-            )
-    except Exception as e:
-        st.error(f"❌ Failed to export data: {e}")
 
+try:
+    data = list(listeria_collection.find({}))
+    if not data:
+        st.warning("⚠️ No data found in the collection.")
+    else:
+        df_export = pd.DataFrame(data)
+        if "_id" in df_export.columns:
+            df_export.drop(columns=["_id"], inplace=True)
+        csv = df_export.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="📄 Download Listeria Collection as CSV",
+            data=csv,
+            file_name="listeria_data.csv",
+            mime="text/csv"
+        )
+except Exception as e:
+    st.error(f"❌ Failed to export data: {e}")
