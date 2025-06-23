@@ -104,7 +104,7 @@ fig.update_layout(
     yaxis=dict(
         title="Total/Detected Tests",
         side="left",
-        range=[0, 200]
+        range=[0, 400]
     ),
     yaxis2=dict(
         title="Detection Rate (%)",
@@ -500,77 +500,77 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True, key='during_production_trend')
 
 
-# 5 Filter for 'Unmapped Samples'
-filtered = data[data['before_during'] == 'Unmapped']
+# # 5 Filter for 'Unmapped Samples'
+# filtered = data[data['before_during'] == 'Unmapped']
 
-# Ensure date column is datetime
-filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
+# # Ensure date column is datetime
+# filtered['sample_date'] = pd.to_datetime(filtered['sample_date'])
 
-# Group by Date
-date_summary = filtered.groupby('sample_date')['test_result'].agg(
-    total_samples='count',
-    detected_tests=lambda x: (x == 'Detected').sum()
-).reset_index()
+# # Group by Date
+# date_summary = filtered.groupby('sample_date')['test_result'].agg(
+#     total_samples='count',
+#     detected_tests=lambda x: (x == 'Detected').sum()
+# ).reset_index()
 
-# Calculate detection rate
-date_summary['detection_rate_percent'] = (
-    (date_summary['detected_tests'] / date_summary['total_samples']) * 100
-).round(1)
+# # Calculate detection rate
+# date_summary['detection_rate_percent'] = (
+#     (date_summary['detected_tests'] / date_summary['total_samples']) * 100
+# ).round(1)
 
-# Sort by date
-date_summary = date_summary.sort_values(by='sample_date')
+# # Sort by date
+# date_summary = date_summary.sort_values(by='sample_date')
 
-# Create chart
-fig = go.Figure()
+# # Create chart
+# fig = go.Figure()
 
-# Bar for total samples
-fig.add_trace(go.Bar(
-    x=date_summary['sample_date'],
-    y=date_summary['total_samples'],
-    name='Total Samples',
-    marker_color='#a06cd5',
-    yaxis='y1'
-))
+# # Bar for total samples
+# fig.add_trace(go.Bar(
+#     x=date_summary['sample_date'],
+#     y=date_summary['total_samples'],
+#     name='Total Samples',
+#     marker_color='#a06cd5',
+#     yaxis='y1'
+# ))
 
-# Line for detection rate
-fig.add_trace(go.Scatter(
-    x=date_summary['sample_date'],
-    y=date_summary['detection_rate_percent'],
-    name='Detection Rate (%)',
-    mode='lines+markers',
-    line=dict(color='crimson', width=2),
-    yaxis='y2'
-))
+# # Line for detection rate
+# fig.add_trace(go.Scatter(
+#     x=date_summary['sample_date'],
+#     y=date_summary['detection_rate_percent'],
+#     name='Detection Rate (%)',
+#     mode='lines+markers',
+#     line=dict(color='crimson', width=2),
+#     yaxis='y2'
+# ))
 
-# Layout with top legend and all date ticks
-fig.update_layout(
-    title='# Unmapped Samples vs Detection Rate',
-    xaxis=dict(
-        title='Date',
-        type='date',
-        tickangle=-90,
-        tickformat='%d-%b',  # e.g., 12-May
-        dtick='D1',          # Force daily tick labels
-        rangeslider=dict(
-            visible=True,
-            thickness=0.02,
-            bgcolor='lightgrey',
-            bordercolor='grey',
-            borderwidth=1
-        ),
-        showgrid=True
-    ),
-    yaxis=dict(title='Total Samples', side='left'),
-    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
-    legend=dict(
-        orientation='h',
-        yanchor='bottom',
-        y=1.1,  # Above chart
-        xanchor='center',
-        x=0.5
-    ),
-    height=500
-)
+# # Layout with top legend and all date ticks
+# fig.update_layout(
+#     title='# Unmapped Samples vs Detection Rate',
+#     xaxis=dict(
+#         title='Date',
+#         type='date',
+#         tickangle=-90,
+#         tickformat='%d-%b',  # e.g., 12-May
+#         dtick='D1',          # Force daily tick labels
+#         rangeslider=dict(
+#             visible=True,
+#             thickness=0.02,
+#             bgcolor='lightgrey',
+#             bordercolor='grey',
+#             borderwidth=1
+#         ),
+#         showgrid=True
+#     ),
+#     yaxis=dict(title='Total Samples', side='left'),
+#     yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+#     legend=dict(
+#         orientation='h',
+#         yanchor='bottom',
+#         y=1.1,  # Above chart
+#         xanchor='center',
+#         x=0.5
+#     ),
+#     height=500
+# )
 
-# Streamlit chart
-st.plotly_chart(fig, use_container_width=True, key='unmapped_trend')
+# # Streamlit chart
+# st.plotly_chart(fig, use_container_width=True, key='unmapped_trend')
