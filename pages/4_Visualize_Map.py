@@ -326,7 +326,7 @@ if selected_date:
         y=height - filtered['y'],
         mode='markers',
         marker=dict(
-            size=12,
+            size=9,
             color=filtered['dot_color'],
             line=dict(width=1, color='DarkSlateGrey')
         ),
