@@ -277,11 +277,11 @@ area_summary['detection_rate_percent'] = (
 # Step 3: Define custom x-axis order
 custom_order = [
     # Fresh
-    'Production', 'Deboning', 'Deskining', 'Injector',
-    'Washer', 
+    'PRODUCTION', 'DEBONING', 'DESKINING', 'INJECTOR',
+    'WASHER', 
     # Smoking + Packing
-    'Entrance', 'LKPW1', 'LKPW2', 'CFS',
-    'Other'
+    'ENTRANCE', 'LKPW1', 'LKPW2', 'CFS',
+    'OTHER'
     # # Unmapped
     # 'Unmapped'
 ]
