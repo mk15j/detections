@@ -124,7 +124,7 @@ else:
                     y=height,
                     sizex=width,
                     sizey=height,
-                    sizing="stretch",
+                    sizing="contain",
                     layer="below"
                 )
             )
