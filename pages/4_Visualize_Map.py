@@ -150,23 +150,14 @@ else:
                 title=f"Listeria Points on {selected_date}"
             )
 
-            # st.plotly_chart(fig, use_container_width=True)
-            fig.update_layout(
-                width=width,
-                height=height,
-                autosize=False,
-            )
-            st.plotly_chart(fig)
-            # # Update figure dimensions to match image size
+            st.plotly_chart(fig, use_container_width=True)
             # fig.update_layout(
-            #     autosize=False,
             #     width=width,
             #     height=height,
+            #     autosize=False,
             # )
-            
-            # # Embed Plotly chart with scrollable container
-            # chart_html = fig.to_html(include_plotlyjs='cdn', full_html=False)
-            
+            # st.plotly_chart(fig)
+                       
             # st.markdown(
             #     f"""
             #     <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
