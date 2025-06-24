@@ -158,14 +158,6 @@ else:
             # )
             # st.plotly_chart(fig)
                        
-            # st.markdown(
-            #     f"""
-            #     <div style="overflow: auto; border: 1px solid #ddd; max-height: 90vh; max-width: 100%; padding: 5px;">
-            #         {chart_html}
-            #     </div>
-            #     """,
-            #     unsafe_allow_html=True
-            # )
-
+          
         else:
             st.warning("No data found for the selected date.")
