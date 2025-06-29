@@ -27,8 +27,8 @@ def load_image_base64(image_path="smoked.png"):
     return image, f"data:image/png;base64,{img_str}", image.size  # (width, height)
 
 # ---- Streamlit App ----
-st.set_page_config(page_title="Fresh Map", page_icon="🧫", layout="wide")
-st.title("Listeria Sample Map Visualization")
+st.set_page_config(page_title="Smoked Map", page_icon="🧫", layout="wide")
+# st.title("Listeria Sample Map Visualization")
 
 # Load image for background
 image_pil, image_base64, (width, height) = load_image_base64()
