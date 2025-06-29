@@ -71,7 +71,7 @@ else:
             recent_lookup = recent_data.groupby('points').apply(
                 lambda x: "<br>&nbsp;&nbsp;".join(
                     x.sort_values('sample_date', ascending=False).apply(
-                        lambda row: f"{row['sample_date']}: {'<b style=\"color:red\">Positive</b>' if row['value'] == 1 else '<b style=\"color:green\">Negative</b>' if row['value'] == 0 else 'Unknown'}",
+                        lambda row: f"{row['sample_date']}: {'<b style=\"color:red\">Detected</b>' if row['value'] == 1 else '<b style=\"color:green\">Not Detected</b>' if row['value'] == 0 else 'Unknown'}",
                         axis=1))
             )
 
