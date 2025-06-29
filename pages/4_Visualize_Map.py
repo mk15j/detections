@@ -85,11 +85,11 @@ else:
             window_data['value'] = pd.to_numeric(window_data['value'], errors='coerce')
 
             def determine_color(pos_ratio):
-                if pos_ratio >= 0.7:
+                if pos_ratio >= 0.5:
                     return "#8B0000"  # blood red
-                elif pos_ratio > 0.5:
-                    return "#FF0000"  # red
                 elif pos_ratio > 0.3:
+                    return "#FF0000"  # red
+                elif pos_ratio > 0.0:
                     return "#FFBF00"  # amber
                 else:
                     return "#008000"  # green
@@ -142,32 +142,32 @@ else:
                 hovertemplate="%{customdata[0]}<extra></extra>"
             ))
 
-            # fig.update_layout(
-            #     xaxis=dict(visible=False, range=[0, width]),
-            #     yaxis=dict(visible=False, range=[0, height]),
-            #     showlegend=False,
-            #     margin=dict(l=0, r=0, t=40, b=0),
-            #     title=f"Listeria Points on {selected_date}"
-            # )
             fig.update_layout(
-    title=f"Listeria Points on {selected_date}",
-    xaxis=dict(
-        visible=False,
-        range=[0, width],
-        scaleanchor='y',  # maintain 1:1 scaling
-        scaleratio=1
-    ),
-    yaxis=dict(
-        visible=False,
-        range=[0, height],
-        scaleanchor='x',
-        scaleratio=1
-    ),
-    autosize=True,
-    margin=dict(l=0, r=0, t=40, b=0),
-    height=int(height * 0.7),  # approximate height scaling
-    dragmode=False
-)
+                xaxis=dict(visible=False, range=[0, width]),
+                yaxis=dict(visible=False, range=[0, height]),
+                showlegend=False,
+                margin=dict(l=0, r=0, t=40, b=0),
+                title=f"Listeria Points on {selected_date}"
+            )
+#             fig.update_layout(
+#     title=f"Listeria Points on {selected_date}",
+#     xaxis=dict(
+#         visible=False,
+#         range=[0, width],
+#         scaleanchor='y',  # maintain 1:1 scaling
+#         scaleratio=1
+#     ),
+#     yaxis=dict(
+#         visible=False,
+#         range=[0, height],
+#         scaleanchor='x',
+#         scaleratio=1
+#     ),
+#     autosize=True,
+#     margin=dict(l=0, r=0, t=40, b=0),
+#     height=int(height * 0.7),  # approximate height scaling
+#     dragmode=False
+# )
 
             st.plotly_chart(fig, use_container_width=True)
             # fig.update_layout(
