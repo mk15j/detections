@@ -105,10 +105,15 @@ else:
             filtered["positivity"] = filtered["points"].map(positivity_percents).fillna("N/A")
 
             # Hover text
+            # filtered['hover_text'] = (
+            #     "<b>Point:</b> " + filtered['points'] + "<br>"
+            #     # + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
+            #     # + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
+            #     + "<b>28-Day Positivity:</b> " + filtered['positivity'] + "<br>"
+            #     + "<b>Last 28 Days:</b><br>&nbsp;&nbsp;" + filtered['history']
+            # )
             filtered['hover_text'] = (
-                "<b>Point:</b> " + filtered['points'] + "<br>"
-                # + "<b>Description:</b> " + filtered['description'].astype(str) + "<br>"
-                # + "<b>Status:</b> " + filtered['value'].map({1: "Positive", 0: "Negative"}).fillna("Unknown") + "<br>"
+                "<b>Location Code:</b> " + filtered['location_code'].astype(str) + "<br>"
                 + "<b>28-Day Positivity:</b> " + filtered['positivity'] + "<br>"
                 + "<b>Last 28 Days:</b><br>&nbsp;&nbsp;" + filtered['history']
             )
