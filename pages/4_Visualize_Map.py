@@ -142,13 +142,32 @@ else:
                 hovertemplate="%{customdata[0]}<extra></extra>"
             ))
 
+            # fig.update_layout(
+            #     xaxis=dict(visible=False, range=[0, width]),
+            #     yaxis=dict(visible=False, range=[0, height]),
+            #     showlegend=False,
+            #     margin=dict(l=0, r=0, t=40, b=0),
+            #     title=f"Listeria Points on {selected_date}"
+            # )
             fig.update_layout(
-                xaxis=dict(visible=False, range=[0, width]),
-                yaxis=dict(visible=False, range=[0, height]),
-                showlegend=False,
-                margin=dict(l=0, r=0, t=40, b=0),
-                title=f"Listeria Points on {selected_date}"
-            )
+    title=f"Listeria Points on {selected_date}",
+    xaxis=dict(
+        visible=False,
+        range=[0, width],
+        scaleanchor='y',  # maintain 1:1 scaling
+        scaleratio=1
+    ),
+    yaxis=dict(
+        visible=False,
+        range=[0, height],
+        scaleanchor='x',
+        scaleratio=1
+    ),
+    autosize=True,
+    margin=dict(l=0, r=0, t=40, b=0),
+    height=int(height * 0.7),  # approximate height scaling
+    dragmode=False
+)
 
             st.plotly_chart(fig, use_container_width=True)
             # fig.update_layout(
