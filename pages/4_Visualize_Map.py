@@ -87,7 +87,7 @@ else:
             def determine_color(pos_ratio):
                 if pos_ratio >= 0.5:
                     return "#8B0000"  # blood red
-                elif pos_ratio > 0.3:
+                elif pos_ratio > 0.2:
                     return "#FF0000"  # red
                 elif pos_ratio > 0.0:
                     return "#FFBF00"  # amber
