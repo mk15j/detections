@@ -38,7 +38,7 @@ image_pil, image_base64, (width, height) = load_image_base64()
 all_data = list(listeria_collection.find({
     "x": {"$exists": True},
     "y": {"$exists": True},
-    "fresh_smoked": "Fresh"
+    "fresh_smoked": "Smoking + Packing"
 }))
 
 if not all_data:
