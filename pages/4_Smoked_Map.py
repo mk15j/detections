@@ -153,7 +153,7 @@ else:
                 yaxis=dict(visible=False, range=[0, height]),
                 showlegend=False,
                 margin=dict(l=0, r=0, t=40, b=0),
-                title=f"Listeria Points on {selected_date}"
+                title=f"Smoked Department Detections on {selected_date}"
             )
 #             fig.update_layout(
 #     title=f"Smoked Department Detections on {selected_date}",
