@@ -563,6 +563,7 @@ fig.update_layout(
         tickformat='%d-%b',
         dtick='D1',
         rangeslider=dict(visible=True),
+         thickness=0.01  # 1% of plot height
         showgrid=True
     ),
     yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
