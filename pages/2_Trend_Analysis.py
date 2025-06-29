@@ -131,14 +131,6 @@ fig.add_trace(go.Bar(
     yaxis='y1'
 ))
 
-# # Bar for detected tests
-# fig.add_trace(go.Bar(
-#     x=summary['week'],
-#     y=summary['detected_tests'],
-#     name='Detected Tests',
-#     marker_color='#d2b7e5',
-#     yaxis='y1'
-# ))
 # Line for detection rate %
 fig.add_trace(go.Scatter(
     x=summary['week'],
@@ -149,16 +141,6 @@ fig.add_trace(go.Scatter(
     line=dict(color='#C00000'),
     yaxis='y2'
 ))
-
-# # Dotted trend line
-# fig.add_trace(go.Scatter(
-#     x=summary['week'],
-#     y=trend_y,
-#     name='Trend Line',
-#     mode='lines',
-#     line=dict(color='#8b1e3f', dash='dot'),  
-#     yaxis='y2'
-# ))
 
 
 fig.update_layout(
@@ -254,7 +236,7 @@ fig.update_layout(
     showgrid=True
     ),
     yaxis=dict(title='Total/Detected Tests', side='left'),
-    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 100]),
+    yaxis2=dict(title='Detection Rate (%)', overlaying='y', side='right', range=[0, 150]),
     legend=dict(
         orientation='h',
         yanchor='bottom',
