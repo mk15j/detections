@@ -69,7 +69,7 @@ else:
             recent_data['points'] = recent_data['points'].astype(str)
             recent_data['value'] = pd.to_numeric(recent_data['value'], errors='coerce')
 
-            recent_lookup = recent_data.groupby('points').apply(
+            recent_lookup = recent_data.groupby('points', group_keys=False).apply(
                 lambda x: "<br>&nbsp;&nbsp;".join(
                     x.sort_values('sample_date', ascending=False).apply(
                         lambda row: f"{row['sample_date']}: {'<b style=\"color:red\">Detected</b>' if row['value'] == 1 else '<b style=\"color:green\">Not Detected</b>' if row['value'] == 0 else 'Unknown'}",
