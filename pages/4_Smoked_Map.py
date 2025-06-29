@@ -16,7 +16,7 @@ client = MongoClient(st.secrets["MONGO_URI"])
 db = client["koral"]
 listeria_collection = db["listeria"]
 
-def load_image_base64(image_path="koral6.png"):
+def load_image_base64(image_path="smoked.png"):
     if not os.path.exists(image_path):
         st.error(f"Image not found at {image_path}")
         return None, None, (0, 0)
