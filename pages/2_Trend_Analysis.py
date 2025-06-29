@@ -21,7 +21,69 @@ if st.sidebar.button("Logout"):
 
 # Load Data
 data = pd.DataFrame(list(listeria_collection.find()))
+#####################################################
+# Ensure sample_date is datetime
+data['sample_date'] = pd.to_datetime(data['sample_date'])
 
+# Group by day
+daily_summary = data.groupby('sample_date')['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# Create Plotly Figure
+fig = go.Figure()
+
+# Total Samples bar
+fig.add_trace(go.Bar(
+    x=daily_summary['sample_date'],
+    y=daily_summary['total_samples'],
+    name='Total Samples',
+    marker_color='#a06cd5'  # Purple
+))
+
+# Detected Samples bar
+fig.add_trace(go.Bar(
+    x=daily_summary['sample_date'],
+    y=daily_summary['detected_tests'],
+    name='Detected Samples',
+    marker_color='#C00000'  # Red
+))
+
+# Layout for grouped bars
+fig.update_layout(
+    title='Day-wise Total vs Detected Samples',
+    xaxis=dict(
+        title='Sample Date',
+        type='date',
+        tickformat='%d-%b',
+        tickangle=-90,
+        dtick='D1',
+        rangeslider=dict(
+            visible=True,
+            thickness=0.01
+        )
+    ),
+    yaxis=dict(title='Number of Samples'),
+    barmode='group',  # Grouped side-by-side bars
+    bargap=0.2,
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.05,
+        xanchor='center',
+        x=0.5
+    ),
+    height=500,
+    margin=dict(l=60, r=40, t=60, b=140)
+)
+
+# Show in Streamlit
+st.plotly_chart(fig, use_container_width=True, key='daily_total_vs_detected')
+
+
+
+#####################################################
 
 
 # Compute detection stats by week (without categorizing by before_during)
