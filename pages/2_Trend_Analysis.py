@@ -499,7 +499,92 @@ fig.update_layout(
 # Streamlit chart
 st.plotly_chart(fig, use_container_width=True, key='during_production_trend')
 
+###############################################################
+# --- Map sub_area to departments ---
+fresh_areas = ['PRODUCTION', 'DEBONING', 'DESKINNING', 'INJECTOR', 'WASHER']
+smoking_packing_areas = ['ENTRANCE', 'LKPW1', 'LKPW2', 'CFS', 'OTHER']
 
+# Assign department based on sub_area
+def assign_department(area):
+    if area in fresh_areas:
+        return 'Fresh'
+    elif area in smoking_packing_areas:
+        return 'Smoking + Packing'
+    else:
+        return 'Unmapped'
+
+data['department'] = data['sub_area'].apply(assign_department)
+
+# --- Filter for valid departments only ---
+data = data[data['department'].isin(['Fresh', 'Smoking + Packing'])]
+
+# --- Ensure sample_date is datetime ---
+data['sample_date'] = pd.to_datetime(data['sample_date'])
+
+# --- Group by sample_date and department ---
+grouped = data.groupby(['sample_date', 'department'])['test_result'].agg(
+    total_samples='count',
+    detected_tests=lambda x: (x == 'Detected').sum()
+).reset_index()
+
+# --- Calculate detection rate ---
+grouped['detection_rate_percent'] = (
+    (grouped['detected_tests'] / grouped['total_samples']) * 100
+).round(1)
+
+# --- Pivot for Plotly line chart ---
+pivot = grouped.pivot(index='sample_date', columns='department', values='detection_rate_percent').fillna(0)
+
+# --- Plotting ---
+fig = go.Figure()
+
+colors = {
+    'Fresh': '#70ad47',             # Green
+    'Smoking + Packing': '#4472c4'  # Blue
+}
+
+for dept in pivot.columns:
+    fig.add_trace(go.Scatter(
+        x=pivot.index,
+        y=pivot[dept],
+        name=f'{dept} Detection Rate (%)',
+        mode='lines+markers',
+        line=dict(color=colors[dept], width=2),
+        marker=dict(size=6)
+    ))
+
+# --- Layout ---
+fig.update_layout(
+    title="Detection Rate Trend by Department",
+    xaxis=dict(
+        title='Sample Date',
+        type='date',
+        tickangle=-90,
+        tickformat='%d-%b',
+        dtick='D1',
+        rangeslider=dict(visible=True),
+        showgrid=True
+    ),
+    yaxis=dict(title='Detection Rate (%)', range=[0, 100]),
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.1,
+        xanchor='center',
+        x=0.5
+    ),
+    height=500,
+    margin=dict(l=60, r=40, t=80, b=120)
+)
+
+# --- Display in Streamlit ---
+st.plotly_chart(fig, use_container_width=True, key='department_trend')
+
+
+
+
+
+################################################################
 # # 5 Filter for 'Unmapped Samples'
 # filtered = data[data['before_during'] == 'Unmapped']
 
