@@ -48,7 +48,7 @@ else:
     df['sample_date'] = pd.to_datetime(df['sample_date']).dt.date
 
     available_dates = df['sample_date'].dropna().unique()
-    selected_date = st.selectbox("Select a Date", sorted(available_dates, reverse=True))
+    selected_date = st.selectbox("Select Date", sorted(available_dates, reverse=True))
 
     if selected_date:
         filtered = df[df['sample_date'] == selected_date].copy()
@@ -156,7 +156,7 @@ else:
                 title=f"Listeria Points on {selected_date}"
             )
 #             fig.update_layout(
-#     title=f"Listeria Points on {selected_date}",
+#     title=f"Smoked Department Detections on {selected_date}",
 #     xaxis=dict(
 #         visible=False,
 #         range=[0, width],
