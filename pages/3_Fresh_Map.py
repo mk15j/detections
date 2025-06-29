@@ -28,7 +28,7 @@ def load_image_base64(image_path="koral6.png"):
 
 # ---- Streamlit App ----
 st.set_page_config(page_title="Fresh Map", page_icon="🧫", layout="wide")
-st.title("Listeria Sample Map Visualization")
+# st.title("Listeria Sample Map Visualization")
 
 # Load image for background
 image_pil, image_base64, (width, height) = load_image_base64()
